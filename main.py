@@ -125,7 +125,7 @@ def identifyFace(faceId, targetGroup):
     params = urllib.parse.urlencode({})
 
     body = {
-        'faceIds' : faceId,
+        'faceIds' : [faceId],
         'personGroupId' : targetGroup
     }
 
@@ -161,10 +161,8 @@ if __name__ == "__main__":
     time.sleep(2) # should replace this with some method that used the gettrainingstatus api
     print('--------------------------')
     takeFrame()
-    trialFaceId = detectFace('thephoto.jpg')
-
-    # # # trialFaceId = detectFace("https://scontent-lht6-1.xx.fbcdn.net/v/t1.0-9/40763831_1267081676765627_1908500290282192896_o.jpg?_nc_cat=111&_nc_ht=scontent-lht6-1.xx&oh=06827214331cb73cd071b45ff628c088&oe=5CB82C5C")
-    identifyFace(trialFaceId, "testgroup")
+    detectedFaceId = detectFace('thephoto.jpg')
+    identifyFace(detectedFaceId, "testgroup")
     
     conn.close()
 
