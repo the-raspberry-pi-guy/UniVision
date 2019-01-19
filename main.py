@@ -160,7 +160,8 @@ def identifyFace(faceId, targetGroup):
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
 def addStudentToDatabase(id, name, programme, faceId, cursor):
-    
+    query = "INSERT INTO students (studentID, studentName, studentProgramme, studentFaceID) VALUES ('" + id + "', '" + name + "', '" + programme + "', '" + faceId + "');"
+    cursor.execute(query)
 
 def hackCambridgeDataSet():
     createGroup("testgroup", "hello group")
@@ -185,7 +186,7 @@ def hackCambridgeDataSet():
 
 if __name__ == "__main__":
     cursor = connectSQLDatabase()
-
+    addStudentToDatabase("1234567", "Matt", "G400", "1234", cursor)
     # hackCambridgeDataSet() # Init only once
     listPersonsInGroup("testgroup")
     time.sleep(2) # should replace this with some method that used the gettrainingstatus api
