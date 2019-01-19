@@ -21,7 +21,6 @@ def createGroup(groupID, groupName):
         response = conn.getresponse()
         data = response.read()
         print(data)
-#        conn.close()
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
@@ -38,7 +37,6 @@ def addPerson(name, targetGroup):
         response = conn.getresponse()
         data = response.read()
         print(data)
-        conn.close()
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
