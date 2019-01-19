@@ -144,10 +144,11 @@ def identifyFace(faceId, targetGroup):
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
-if __name__ == "__main__":
+def hackCambridgeDataSet():
     createGroup("testgroup", "hello group")
     addPerson("Matt", "testgroup")
     addPerson("Neil", "testgroup")
+    addPerson("Raf", "testgroup")
     addFace("Matt", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Matt/46854334_1320054438135017_7272253035202478080_o.jpg")
     addFace("Matt", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Matt/50425886_1359944970812630_2846946035958284288_o.jpg")
     addFace("Matt", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Matt/LRM_EXPORT_471358170522868_20181228_220101328-2.jpeg")
@@ -155,7 +156,14 @@ if __name__ == "__main__":
     addFace("Neil", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Neil/IMG_9449.PNG")
     addFace("Neil", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Neil/vsco5a9442a42aaee.JPG")
     addFace("Neil", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Neil/IMG_1818.JPG")
+    addFace("Raf", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Raf/raf1.png")
+    addFace("Raf", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Raf/raf2.jpg")
+    addFace("Raf", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Raf/raf3.png")
+    addFace("Raf", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Raf/raf4.png")
+    addFace("Raf", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Raf/raf5.png")
 
+if __name__ == "__main__":
+    hackCambridgeDataSet() # Init only once
     listPersonsInGroup("testgroup")
     trainGroup("testgroup")
     time.sleep(2) # should replace this with some method that used the gettrainingstatus api
