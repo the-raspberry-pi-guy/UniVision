@@ -70,6 +70,27 @@ def trainGroup(targetGroup):
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
+def detectFace(URL):
+
+    params = urllib.parse.urlencode({
+    # Request parameters
+    'returnFaceId': 'true',
+    'returnFaceLandmarks': 'false',
+#    'returnFaceAttributes': '{string}',
+    })
+
+    body = {
+        'url' = URL
+    }
+
+    try:
+        conn.request("POST", "/face/v1.0/detect?%s" % params, json.dumps(body), headers)
+        response = conn.getresponse()
+        data = response.read()
+        print(data)
+    except Exception as e:
+        print("[Errno {0}] {1}".format(e.errno, e.strerror))
+
 if __name__ == "__main__":
 #    createGroup("testgroup", "hello group")
     addPerson("Matt", "testgroup")
