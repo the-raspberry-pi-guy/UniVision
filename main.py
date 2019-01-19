@@ -48,7 +48,7 @@ def addFace(targetName, targetGroup, URL):
     params = urllib.parse.urlencode({})
 
     body = {
-        "url" : URL
+        "url" : '{}'.format(URL)
     }
 
     try:
