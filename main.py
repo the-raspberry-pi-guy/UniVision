@@ -7,7 +7,7 @@ headers = {
 
 conn = http.client.HTTPSConnection('northeurope.api.cognitive.microsoft.com')
 
-def createGroup(groupID, groupName):
+def createGroup(groupId, groupName):
 
     params = urllib.parse.urlencode({})
 
@@ -16,7 +16,7 @@ def createGroup(groupID, groupName):
             }
 
     try:
-        conn.request("PUT", "/face/v1.0/persongroups/" + groupID + "?%s" % params, json.dumps(body), headers)
+        conn.request("PUT", "/face/v1.0/persongroups/" + groupId + "?%s" % params, json.dumps(body), headers)
         response = conn.getresponse()
         data = response.read()
         print("GROUP CREATED:")
@@ -45,9 +45,10 @@ def addFace(targetName, targetGroup, URL):
 
     # WARNING: going off the assumption that there are no duplicate names
     listOfPersons = json.loads(listPersonsInGroup(targetGroup))
+    personId = ""
     for person in listOfPersons:
         if person["name"] == targetName:
-            personID = person["personID"]
+            personId = person["personId"]
             break
 
     params = urllib.parse.urlencode({})
@@ -57,7 +58,7 @@ def addFace(targetName, targetGroup, URL):
     }
 
     try:
-        conn.request("POST", "/face/v1.0/persongroups/" + targetGroup + "/persons/" + personID + "/persistedFaces?%s" % params, json.dumps(body), headers)
+        conn.request("POST", "/face/v1.0/persongroups/" + targetGroup + "/persons/" + personId + "/persistedFaces?%s" % params, json.dumps(body), headers)
         response = conn.getresponse()
         data = response.read()
         print("FACE ADDED TO", targetName)
@@ -94,7 +95,7 @@ def trainGroup(targetGroup):
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
-# Returns faceID to be fed into identifyFace
+# Returns faceId to be fed into identifyFace
 def detectFace(URL):
 
     params = urllib.parse.urlencode({
@@ -119,12 +120,12 @@ def detectFace(URL):
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
-def identifyFace(faceID, targetGroup):
+def identifyFace(faceId, targetGroup):
 
     params = urllib.parse.urlencode({})
 
     body = {
-    'faceIds' : faceID,
+    'faceIds' : faceId,
     'personGroupId' : targetGroup
 }
 
