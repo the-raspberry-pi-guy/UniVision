@@ -34,7 +34,6 @@ def addPerson(name, targetGroup):
     }
 
     try:
-        conn = http.client.HTTPSConnection('northeurope.api.cognitive.microsoft.com')
         conn.request("POST", "/face/v1.0/persongroups/" + targetGroup + "/persons?%s" % params, json.dumps(body), headers)
         response = conn.getresponse()
         data = response.read()
@@ -42,6 +41,9 @@ def addPerson(name, targetGroup):
         conn.close()
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
+
+def addFaces(targetName, targetGroup, URL):
+
 
 if __name__ == "__main__":
 #    createGroup("testgroup", "hello group")
