@@ -1,4 +1,5 @@
-import http.client, urllib.request, urllib.parse, urllib.error, base64, json, time, requests
+import http.client, urllib.request, urllib.parse, urllib.error, base64, json, time, requests, cv2, numpy
+
 headers = {
     # Request headers
     'Content-Type': 'application/json',
@@ -88,6 +89,12 @@ def trainGroup(targetGroup):
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
+cam = cv2.VideoCapture(0)
+
+def takeFrame():
+    s, img = cam.read()
+    cv2.imwrite("thephoto.jpg",img)
+
 # Returns faceId to be fed into identifyFace
 def detectFace(imgFilename):
 
@@ -108,6 +115,7 @@ def detectFace(imgFilename):
     try:
         # response = requests.post(url, data=imgData, headers=headers, params=params)
         response = requests.post(url, headers=headers, data=imgData)
+        print(response)
         return response.json()[0]["faceId"]
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
@@ -152,10 +160,11 @@ if __name__ == "__main__":
     trainGroup("testgroup")
     time.sleep(2) # should replace this with some method that used the gettrainingstatus api
     print('--------------------------')
-    detectFace('thephoto.jpg')
+    takeFrame()
+    trialFaceId = detectFace('thephoto.jpg')
 
     # # # trialFaceId = detectFace("https://scontent-lht6-1.xx.fbcdn.net/v/t1.0-9/40763831_1267081676765627_1908500290282192896_o.jpg?_nc_cat=111&_nc_ht=scontent-lht6-1.xx&oh=06827214331cb73cd071b45ff628c088&oe=5CB82C5C")
-    # identifyFace(trialFaceId, "testgroup")
+    identifyFace(trialFaceId, "testgroup")
     
     conn.close()
 
