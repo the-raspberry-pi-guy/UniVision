@@ -45,19 +45,33 @@ def addFace(targetName, targetGroup, URL):
     params = urllib.parse.urlencode({})
 
     body = {
-        "url" : URL
+        "url" : '{}'.format(URL),
     }
 
     try:
-        conn = http.client.HTTPSConnection('northeurope.api.cognitive.microsoft.com')
         conn.request("POST", "/face/v1.0/persongroups/" + targetGroup + "/persons/bf5d5782-0155-4ad7-8bdd-fced0a397ae1/persistedFaces?%s" % params, json.dumps(body), headers)
         response = conn.getresponse()
         data = response.read()
         print(data)
-        conn.close()
+    except Exception as e:
+        print("[Errno {0}] {1}".format(e.errno, e.strerror))
+
+def listPersonsInGroup(targetGroupID):
+
+    params = urllib.parse.urlencode({
+    })
+
+    try:
+        conn = http.client.HTTPSConnection('northeurope.api.cognitive.microsoft.com')
+        conn.request("GET", "/face/v1.0/persongroups/" + targetGroupID + "/persons?%s" % params, "{body}", headers)
+        response = conn.getresponse()
+        data = response.read()
+        print(data)
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
 if __name__ == "__main__":
-#    createGroup("testgroup", "hello group")
-    addPerson("Matt", "testgroup")
+    # createGroup("testgroup", "hello group")
+    # addPerson("Matt", "testgroup")
+    listPersonsInGroup("students")
+    addFace("Matt", "students", "testurl")
