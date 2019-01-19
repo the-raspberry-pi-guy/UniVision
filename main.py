@@ -12,8 +12,8 @@ def createGroup(groupId, groupName):
     params = urllib.parse.urlencode({})
 
     body = {
-            "name" : '{}'.format(groupName),
-            }
+        "name" : '{}'.format(groupName),
+    }
 
     try:
         conn.request("PUT", "/face/v1.0/persongroups/" + groupId + "?%s" % params, json.dumps(body), headers)
