@@ -111,7 +111,22 @@ def detectFace(URL):
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
-def identifyFace()
+def identifyFace(faceID, targetGroup):
+
+    params = urllib.parse.urlencode({})
+
+    body = {
+    'faceIds' : faceID,
+    'personGroupId' : targetGroup
+}
+
+    try:
+        conn.request("POST", "/face/v1.0/identify?%s" % params, json.dumps(body), headers)
+        response = conn.getresponse()
+        data = response.read()
+        print(data)
+    except Exception as e:
+        print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
 if __name__ == "__main__":
     # createGroup("testgroup", "hello group")
