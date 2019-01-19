@@ -1,4 +1,4 @@
-import http.client, urllib.request, urllib.parse, urllib.error, base64, json, time, requests, cv2, numpy
+import http.client, urllib.request, urllib.parse, urllib.error, base64, json, time, requests, cv2, numpy, pyodbc
 
 headers = {
     # Request headers
@@ -7,6 +7,16 @@ headers = {
 }
 
 conn = http.client.HTTPSConnection('northeurope.api.cognitive.microsoft.com')
+
+def connectSQLDatabase():
+    server = 'univision.database.windows.net'
+    database = 'UniVision'
+    username = 'adminunivision'
+    password = '!univision19012019'
+    driver= '{ODBC Driver 17 for SQL Server}'
+    cnxn = pyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password)
+    cursor = cnxn.cursor()
+    return cursor
 
 def createGroup(groupId, groupName):
 
@@ -149,13 +159,18 @@ def identifyFace(faceId, targetGroup):
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
+def addStudentToDatabase(id, name, programme, faceId, cursor):
+    
+
 def hackCambridgeDataSet():
     createGroup("testgroup", "hello group")
     addPerson("Matt", "testgroup")
     addPerson("Neil", "testgroup")
     addPerson("Raf", "testgroup")
     addFace("Matt", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Matt/46854334_1320054438135017_7272253035202478080_o.jpg")
+    addFace("Matt", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Matt/40646988_1267616973378764_4509956788853932032_n.jpg")
     addFace("Matt", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Matt/50425886_1359944970812630_2846946035958284288_o.jpg")
+    addFace("Matt", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Matt/47173225_1322186427921818_2925789588129579008_o.jpg")
     addFace("Matt", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Matt/LRM_EXPORT_471358170522868_20181228_220101328-2.jpeg")
     addFace("Neil", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Neil/IMG_3102.JPG")
     addFace("Neil", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Neil/IMG_9449.PNG")
@@ -169,6 +184,8 @@ def hackCambridgeDataSet():
     trainGroup("testgroup")
 
 if __name__ == "__main__":
+    cursor = connectSQLDatabase()
+
     # hackCambridgeDataSet() # Init only once
     listPersonsInGroup("testgroup")
     time.sleep(2) # should replace this with some method that used the gettrainingstatus api
