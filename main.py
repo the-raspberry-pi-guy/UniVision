@@ -129,6 +129,10 @@ def identifyFace(faceID, targetGroup):
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
 if __name__ == "__main__":
-    # createGroup("testgroup", "hello group")
-    # addPerson("Matt", "testgroup")
+    createGroup("testgroup", "hello group")
+    addPerson("Matt", "testgroup")
+    addPerson("Neil", "testgroup")
+    addFace("Matt", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Matt/46854334_1320054438135017_7272253035202478080_o.jpg")
     addFace("Matt", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Matt/50425886_1359944970812630_2846946035958284288_o.jpg")
+    addFace("Matt", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Matt/LRM_EXPORT_471358170522868_20181228_220101328-2.jpeg")
+    
