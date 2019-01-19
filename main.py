@@ -41,8 +41,12 @@ def addPerson(name, targetGroup):
 
 def addFace(targetName, targetGroup, URL):
 
+    # WARNING: going off the assumption that there are no duplicate names
     listOfPersons = json.loads(listPersonsInGroup(targetGroup))
-    personID = listOfPersons[0]["personId"]
+    for person in listOfPersons:
+        if person["name"] == targetName:
+            personID = person["personID"]
+            break
 
     params = urllib.parse.urlencode({})
 
