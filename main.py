@@ -173,11 +173,13 @@ if __name__ == "__main__":
     listPersonsInGroup("testgroup")
     time.sleep(2) # should replace this with some method that used the gettrainingstatus api
     print('--------------------------')
-    imgData = takeFrame()
-    detectedFaceId = detectFace(imgData)
 
-    if detectedFaceId != -1:
-        identifyFace(detectedFaceId, "testgroup")
-    
-    conn.close()
+    try:
+        while True:
+            imgData = takeFrame()
+            detectedFaceId = detectFace(imgData)
+            if detectedFaceId != -1:
+                identifyFace(detectedFaceId, "testgroup")
 
+    except KeyboardInterrupt:
+        conn.close()
