@@ -161,11 +161,11 @@ def hackCambridgeDataSet():
     addFace("Raf", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Raf/raf3.png")
     addFace("Raf", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Raf/raf4.png")
     addFace("Raf", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Raf/raf5.png")
+    trainGroup("testgroup")
 
 if __name__ == "__main__":
     hackCambridgeDataSet() # Init only once
     listPersonsInGroup("testgroup")
-    trainGroup("testgroup")
     time.sleep(2) # should replace this with some method that used the gettrainingstatus api
     print('--------------------------')
     takeFrame()
