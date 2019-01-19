@@ -93,18 +93,15 @@ cam = cv2.VideoCapture(0)
 
 def takeFrame():
     s, img = cam.read()
-    cv2.imwrite("thephoto.jpg",img)
+    return cv2.imencode(".jpg",img)[1].tostring()
 
 # Returns faceId to be fed into identifyFace
-def detectFace(imgFilename):
+def detectFace(imgData):
 
     headers = {'Content-Type': 'application/octet-stream', 
                'Ocp-Apim-Subscription-Key': '700bad17d5d6443bad2fd69b0da27cdc'}
 
     url = 'https://northeurope.api.cognitive.microsoft.com/face/v1.0/detect'
-
-    with open(imgFilename, 'rb') as f:
-        imgData = f.read()
 
     params = urllib.parse.urlencode({
         'returnFaceId': 'true',
@@ -168,8 +165,8 @@ if __name__ == "__main__":
     listPersonsInGroup("testgroup")
     time.sleep(2) # should replace this with some method that used the gettrainingstatus api
     print('--------------------------')
-    takeFrame()
-    detectedFaceId = detectFace('thephoto.jpg')
+    imgData = takeFrame()
+    detectedFaceId = detectFace(imgData)
     identifyFace(detectedFaceId, "testgroup")
     
     conn.close()
