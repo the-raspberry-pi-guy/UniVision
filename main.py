@@ -152,8 +152,8 @@ if __name__ == "__main__":
     trainGroup("testgroup")
     time.sleep(2) # should replace this with some method that used the gettrainingstatus api
     print('--------------------------')
-    trialFaceId = detectFace('thephoto.jpg')
-    identifyFace(trialFaceId, "testgroup")
+    detectedFaceId = detectFace('thephoto.jpg')
+    identifyFace(detectedFaceId, "testgroup")
     
     conn.close()
 
