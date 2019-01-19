@@ -104,14 +104,10 @@ def detectFace(URL):
     try:
         conn.request("POST", "/face/v1.0/detect?%s" % params, json.dumps(body), headers)
         response = conn.getresponse()
-        data = response.read()
-        resp = json.loads(data)
-        print(resp)
-        print("FACE DETECTED:")
-        final = [resp[0]["faceId"]]
-        print(final)
-        print(type(final))
-        return final
+        faceInfo = json.loads(response.read())
+        print("FACE DETECTED")
+
+        return [faceInfo[0]["faceId"]] # assumes only one face in image to detect
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
@@ -127,8 +123,15 @@ def identifyFace(faceId, targetGroup):
     try:
         conn.request("POST", "/face/v1.0/identify?%s" % params, json.dumps(body), headers)
         response = conn.getresponse()
-        data = response.read()
-        print(data)
+        data = json.loads(response.read())
+
+        candidatePersonId = data[0]["candidates"][0]["personId"]
+        listOfPersons = json.loads(listPersonsInGroup(targetGroup))
+        for person in listOfPersons:
+            if person["personId"] == candidatePersonId:
+                print("PERSON IDENTIFIED: " + person["name"])
+                break
+
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
