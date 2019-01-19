@@ -1,4 +1,4 @@
-import http.client, urllib.request, urllib.parse, urllib.error, base64, json
+import http.client, urllib.request, urllib.parse, urllib.error, base64, json, time
 headers = {
     # Request headers
     'Content-Type': 'application/json',
@@ -116,7 +116,10 @@ def detectFace(URL):
         resp = json.loads(data)
         print(resp)
         print("FACE DETECTED:")
-        return resp[0]["faceId"]
+        final = [resp[0]["faceId"]]
+        print(final)
+        print(type(final))
+        return final
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
@@ -125,9 +128,9 @@ def identifyFace(faceId, targetGroup):
     params = urllib.parse.urlencode({})
 
     body = {
-    'faceIds' : faceId,
-    'personGroupId' : targetGroup
-}
+        'faceIds' : faceId,
+        'personGroupId' : targetGroup
+    }
 
     try:
         conn.request("POST", "/face/v1.0/identify?%s" % params, json.dumps(body), headers)
@@ -151,9 +154,10 @@ if __name__ == "__main__":
 
     listPersonsInGroup("testgroup")
     trainGroup("testgroup")
+    time.sleep(2)
     print('--------------------------')
-    trialFaceId = detectFace("https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Matt/47173225_1322186427921818_2925789588129579008_o.jpg")
-    identifyFace(trialFaceId, testgroup)
+    trialFaceId = detectFace("https://scontent-lht6-1.xx.fbcdn.net/v/t1.0-9/40763831_1267081676765627_1908500290282192896_o.jpg?_nc_cat=111&_nc_ht=scontent-lht6-1.xx&oh=06827214331cb73cd071b45ff628c088&oe=5CB82C5C")
+    identifyFace(trialFaceId, "testgroup")
     
     conn.close()
 
