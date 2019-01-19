@@ -60,14 +60,13 @@ def addFace(targetName, targetGroup, URL):
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
 # returns a json list of people in a group
-def listPersonsInGroup(targetGroupID):
+def listPersonsInGroup(targetGroup):
 
     params = urllib.parse.urlencode({
     })
 
     try:
-        conn = http.client.HTTPSConnection('northeurope.api.cognitive.microsoft.com')
-        conn.request("POST", "/face/v1.0/persongroups/" + targetGroup + "/persons/bf5d5782-0155-4ad7-8bdd-fced0a397ae1/persistedFaces?%s" % params, json.dumps(body), headers)
+        conn.request("GET", "/face/v1.0/persongroups/" + targetGroup + "/persons?%s" % params, "{body}", headers)
         response = conn.getresponse()
         data = response.read()
         print(data)
@@ -106,7 +105,7 @@ def detectFace(URL):
         response = conn.getresponse()
         data = response.read()
         resp = json.loads(data)
-        print resp
+        print(resp)
         return resp[0]["faceId"]
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
@@ -131,4 +130,5 @@ def identifyFace(faceID, targetGroup):
 if __name__ == "__main__":
     # createGroup("testgroup", "hello group")
     # addPerson("Matt", "testgroup")
-    addFace("Matt", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Matt/50425886_1359944970812630_2846946035958284288_o.jpg")
+    # addFace("Matt", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Matt/50425886_1359944970812630_2846946035958284288_o.jpg")
+    listPersonsInGroup("students")
