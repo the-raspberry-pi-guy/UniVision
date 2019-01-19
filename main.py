@@ -1,4 +1,4 @@
-import http.client, urllib.request, urllib.parse, urllib.error, base64, json, time
+import http.client, urllib.request, urllib.parse, urllib.error, base64, json, time, requests
 headers = {
     # Request headers
     'Content-Type': 'application/json',
@@ -89,7 +89,15 @@ def trainGroup(targetGroup):
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
 # Returns faceId to be fed into identifyFace
-def detectFace(URL):
+def detectFace(imgFilename):
+
+    headers = {'Content-Type': 'application/octet-stream', 
+               'Ocp-Apim-Subscription-Key': '700bad17d5d6443bad2fd69b0da27cdc'}
+
+    url = 'https://northeurope.api.cognitive.microsoft.com/face/v1.0/detect'
+
+    with open(imgFilename, 'rb') as f:
+        imgData = f.read()
 
     params = urllib.parse.urlencode({
         'returnFaceId': 'true',
@@ -97,17 +105,10 @@ def detectFace(URL):
         # 'returnFaceAttributes': '{string}',
     })
 
-    body = {
-        'url' : URL
-    }
-
     try:
-        conn.request("POST", "/face/v1.0/detect?%s" % params, json.dumps(body), headers)
-        response = conn.getresponse()
-        faceInfo = json.loads(response.read())
-        print("FACE DETECTED")
-
-        return [faceInfo[0]["faceId"]] # assumes only one face in image to detect
+        # response = requests.post(url, data=imgData, headers=headers, params=params)
+        response = requests.post(url, headers=headers, data=imgData)
+        return response.json()[0]["faceId"]
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
@@ -151,8 +152,10 @@ if __name__ == "__main__":
     trainGroup("testgroup")
     time.sleep(2) # should replace this with some method that used the gettrainingstatus api
     print('--------------------------')
-    trialFaceId = detectFace("https://scontent-lht6-1.xx.fbcdn.net/v/t1.0-9/40763831_1267081676765627_1908500290282192896_o.jpg?_nc_cat=111&_nc_ht=scontent-lht6-1.xx&oh=06827214331cb73cd071b45ff628c088&oe=5CB82C5C")
-    identifyFace(trialFaceId, "testgroup")
+    detectFace('thephoto.jpg')
+
+    # # # trialFaceId = detectFace("https://scontent-lht6-1.xx.fbcdn.net/v/t1.0-9/40763831_1267081676765627_1908500290282192896_o.jpg?_nc_cat=111&_nc_ht=scontent-lht6-1.xx&oh=06827214331cb73cd071b45ff628c088&oe=5CB82C5C")
+    # identifyFace(trialFaceId, "testgroup")
     
     conn.close()
 
