@@ -69,8 +69,7 @@ def addFace(targetName, targetGroup, URL):
 # returns a json list of people in a group
 def listPersonsInGroup(targetGroup):
 
-    params = urllib.parse.urlencode({
-    })
+    params = urllib.parse.urlencode({})
 
     try:
         conn.request("GET", "/face/v1.0/persongroups/" + targetGroup + "/persons?%s" % params, "{body}", headers)
@@ -99,10 +98,9 @@ def trainGroup(targetGroup):
 def detectFace(URL):
 
     params = urllib.parse.urlencode({
-    # Request parameters
-    'returnFaceId': 'true',
-    'returnFaceLandmarks': 'false',
-#    'returnFaceAttributes': '{string}',
+        'returnFaceId': 'true',
+        'returnFaceLandmarks': 'false',
+        # 'returnFaceAttributes': '{string}',
     })
 
     body = {
