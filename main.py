@@ -159,8 +159,8 @@ def identifyFace(faceId, targetGroup):
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
-def addStudentToDatabase(id, name, programme, faceId, cursor):
-    query = "INSERT INTO students (studentID, studentName, studentProgramme, studentFaceID) VALUES ('" + id + "', '" + name + "', '" + programme + "', '" + faceId + "');"
+def addStudentToDatabase(id, name, programme, cursor):
+    query = "INSERT INTO students (studentID, studentName, studentProgramme) VALUES ('" + id + "', '" + name + "', '" + programme + "');"
     cursor.execute(query)
 
 def hackCambridgeDataSet():
@@ -185,12 +185,11 @@ def hackCambridgeDataSet():
     trainGroup("testgroup")
 
 def hackCambridgeDatabaseSetup():
-    addStudentToDatabase("0000000", "Matt", "G400", "1234", cursor)
+    addStudentToDatabase("0000000", "Matt", "G400", cursor)
 
 
 if __name__ == "__main__":
     cursor = connectSQLDatabase()
-    addStudentToDatabase("1234567", "Matt", "G400", "1234", cursor)
     # hackCambridgeDataSet() # Init only once
     listPersonsInGroup("testgroup")
     time.sleep(2) # should replace this with some method that used the gettrainingstatus api
