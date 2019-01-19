@@ -42,6 +42,9 @@ def addPerson(name, targetGroup):
 
 def addFace(targetName, targetGroup, URL):
 
+    listOfPersons = json.loads(listPersonsInGroup(targetGroup))
+    personID = listOfPersons[0]["personId"]
+
     params = urllib.parse.urlencode({})
 
     body = {
@@ -49,13 +52,14 @@ def addFace(targetName, targetGroup, URL):
     }
 
     try:
-        conn.request("POST", "/face/v1.0/persongroups/" + targetGroup + "/persons/bf5d5782-0155-4ad7-8bdd-fced0a397ae1/persistedFaces?%s" % params, json.dumps(body), headers)
+        conn.request("POST", "/face/v1.0/persongroups/" + targetGroup + "/persons/" + personID + "/persistedFaces?%s" % params, json.dumps(body), headers)
         response = conn.getresponse()
         data = response.read()
         print(data)
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
+# returns a json list of people in a group
 def listPersonsInGroup(targetGroupID):
 
     params = urllib.parse.urlencode({
@@ -67,6 +71,7 @@ def listPersonsInGroup(targetGroupID):
         response = conn.getresponse()
         data = response.read()
         print(data)
+        return data
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
@@ -92,7 +97,7 @@ def detectFace(URL):
     })
 
     body = {
-        'url' = URL
+        'url' : URL
     }
 
     try:
@@ -106,5 +111,4 @@ def detectFace(URL):
 if __name__ == "__main__":
     # createGroup("testgroup", "hello group")
     # addPerson("Matt", "testgroup")
-    listPersonsInGroup("students")
-    addFace("Matt", "students", "testurl")
+    addFace("Matt", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Matt/50425886_1359944970812630_2846946035958284288_o.jpg")
