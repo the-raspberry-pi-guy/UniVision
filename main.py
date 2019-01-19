@@ -95,7 +95,7 @@ def takeFrame():
     s, img = cam.read()
     return cv2.imencode(".jpg",img)[1].tostring()
 
-# Returns faceId to be fed into identifyFace
+# Returns faceId to be fed into identifyFace, returns -1 (integer) if no face found
 def detectFace(imgData):
 
     headers = {'Content-Type': 'application/octet-stream', 
@@ -114,6 +114,9 @@ def detectFace(imgData):
         response = requests.post(url, headers=headers, data=imgData)
         print(response)
         return response.json()[0]["faceId"]
+    except IndexError:
+        print("NO FACE DETECTED")
+        return -1
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
@@ -131,6 +134,9 @@ def identifyFace(faceId, targetGroup):
         response = conn.getresponse()
         data = json.loads(response.read())
 
+        if not data or not data[0]["candidates"]:
+            raise IndexError()
+
         candidatePersonId = data[0]["candidates"][0]["personId"]
         listOfPersons = json.loads(listPersonsInGroup(targetGroup))
         for person in listOfPersons:
@@ -138,6 +144,8 @@ def identifyFace(faceId, targetGroup):
                 print("PERSON IDENTIFIED: " + person["name"])
                 break
 
+    except IndexError:
+        print("***** Idk something went wrong *****")
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
@@ -161,13 +169,15 @@ def hackCambridgeDataSet():
     trainGroup("testgroup")
 
 if __name__ == "__main__":
-    hackCambridgeDataSet() # Init only once
+    # hackCambridgeDataSet() # Init only once
     listPersonsInGroup("testgroup")
     time.sleep(2) # should replace this with some method that used the gettrainingstatus api
     print('--------------------------')
     imgData = takeFrame()
     detectedFaceId = detectFace(imgData)
-    identifyFace(detectedFaceId, "testgroup")
+
+    if detectedFaceId != -1:
+        identifyFace(detectedFaceId, "testgroup")
     
     conn.close()
 
