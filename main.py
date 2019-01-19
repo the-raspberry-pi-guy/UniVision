@@ -19,8 +19,7 @@ def createGroup(groupId, groupName):
         conn.request("PUT", "/face/v1.0/persongroups/" + groupId + "?%s" % params, json.dumps(body), headers)
         response = conn.getresponse()
         data = response.read()
-        print("GROUP CREATED:")
-        print(data)
+        print("GROUP CREATED")
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
@@ -37,7 +36,6 @@ def addPerson(name, targetGroup):
         response = conn.getresponse()
         data = response.read()
         print("PERSON ADDED: ", name)
-        print(data)
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
@@ -62,7 +60,6 @@ def addFace(targetName, targetGroup, URL):
         response = conn.getresponse()
         data = response.read()
         print("FACE ADDED TO", targetName)
-        print(data)
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
@@ -75,8 +72,6 @@ def listPersonsInGroup(targetGroup):
         conn.request("GET", "/face/v1.0/persongroups/" + targetGroup + "/persons?%s" % params, "{body}", headers)
         response = conn.getresponse()
         data = response.read()
-        print("PERSONS IN GROUP:")
-        print(data)
         return data
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
@@ -90,7 +85,6 @@ def trainGroup(targetGroup):
         response = conn.getresponse()
         data = response.read()
         print("GROUP TRAINED")
-        print(data)
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
