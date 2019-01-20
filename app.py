@@ -21,5 +21,6 @@ def courses():
 @app.route("/poll")
 def poll():
     lastPersonScannedId = attendanceApp.getLastPersonScanned()
-    personScannedData = '{"ID" : "' + lastPersonScannedId + '"}'
+    # personScannedData = '{"ID" : "' + lastPersonScannedId + '"}'
+    personScannedData = attendanceApp.getStudentJson(lastPersonScannedId)
     return personScannedData

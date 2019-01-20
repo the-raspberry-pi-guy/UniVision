@@ -309,9 +309,16 @@ class FaceID(object):
         self.addStudentToDatabase("1111111", "Neil Weidinger", "BSc Computer Science & Artificial Intelligence")
         self.addStudentToDatabase("2222222", "Rafael Anderka", "BSc Computer Science")
 
-    def getStudentString(self, studentId):
+    def getStudentJson(self, studentId):
         studentDetails = self.getStudentDetails(studentId)
-        return studentDetails[2] + ", s" + studentDetails[1] + ", " + studentDetails[3]
+
+        studentDetailsDict = {
+            "name" : studentDetails[2],
+            "id" : "s" + studentDetails[1],
+            "degree" : studentDetails[3]
+        }
+
+        return json.dumps(studentDetailsDict)
 
     def main(self):
         #self.hackCambridgeTrainInit() # Init only once
@@ -321,8 +328,9 @@ class FaceID(object):
         #print(self.getCourseDetails("MATH08057"))
         #print(self.getCourseAttendanceScore("0000000" ,"MATH08057"))
         #print(self.getOverallAttendanceScore("0000000"))
-        #self.getStudentString("0000000")
+        #self.getStudentJson("0000000")
         #print(self.getLectureAttendance("8"))
+>>>>>>> gui
         self.wipeAttendanceLog("1")
         print('--------------------------')
         self.takeAttendance("1")
