@@ -14,7 +14,18 @@ setInterval(function()
 
             if (!(jsonData.id in students)) {
                 students[jsonData.id] = "defaultname";
-                dataBody.innerHTML += '<tr><th scope="row">' + jsonData.name + ' (' + jsonData.id + ') ' + '</th><td id="student-data" class="text-right">' + jsonData.degree + '</td></tr>';
+
+                if (jsonData.id === "s0000000") {
+                    document.querySelector('#matt').innerHTML = '<th id="matt" scope="row">✅ Matt Timmons-Brown (s0000000)</th>';
+                }
+                else if (jsonData.id === "s1111111") {
+                    document.querySelector('#neil').innerHTML = '<th id="neil" scope="row">✅ Neil Weidinger (s1111111)</th>';
+                }
+                else if (jsonData.id === "s2222222") {
+                    document.querySelector('#rafa').innerHTML = '<th id="rafa" scope="row">✅ Rafael Anderka (s2222222)</th>';
+                }
+
+                // dataBody.innerHTML += '<tr><th scope="row">' + jsonData.name + ' (' + jsonData.id + ') ' + '</th><td id="student-data" class="text-right">' + jsonData.degree + '</td></tr>';
             }
         }
     });
