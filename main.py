@@ -164,6 +164,7 @@ class FaceID(object):
     def addStudentToDatabase(self, id, name, programme, cursor):
         query = "INSERT INTO students (studentID, studentName, studentProgramme) VALUES ('" + id + "', '" + name + "', '" + programme + "');"
         cursor.execute(query)
+        cursor.commit()
 
     def takeAttendance(self, timetableKey, cursor):
         try:
@@ -181,8 +182,40 @@ class FaceID(object):
                             addQuery = "INSERT INTO attendance (studentID, timetableKey) VALUES ('" + studentId + "', '" + timetableKey + "');"
                             cursor.execute(addQuery)
                             cursor.commit()
+                        else:
+                            print('Attendance already taken')
         except KeyboardInterrupt:
             self.conn.close()
+
+    def getStudentDetails(self, studentId, cursor):
+        try:
+            retrieveDetailsQuery = "SELECT * FROM students WHERE (studentID = '" + studentId + "');"
+            cursor.execute(retrieveDetailsQuery)
+            return cursor.fetchone()
+        except:
+            print("Error in getStudentName")
+
+    def getCourseDetails(self, courseId, cursor):
+        try:
+            retrieveCourseQuery = "SELECT * FROM courses WHERE (courseID = '" + courseId + "');"
+            cursor.execute(retrieveCourseQuery)
+            return cursor.fetchone()
+        except:
+            print("Error in getCourseDetails")
+
+    def getCourseAttendanceScore(self, studentId, courseId, cursor):
+        try:
+            retrieveTotalNoLecturesQuery = "SELECT timetableKey FROM timetable WHERE (courseID = '" + courseId + "');"
+            cursor.execute(retrieveTotalNoLecturesQuery)
+            totalNoLectures = len(cursor.fetchall())
+
+            retrieveTotalNoAttendancesQuery = "SELECT attendanceKey FROM attendance WHERE (studentID = '" + studentId + "');"
+            cursor.execute(retrieveTotalNoAttendancesQuery)
+            totalNoAttendences = len(cursor.fetchall())
+            score = round((totalNoAttendences/totalNoLectures)*100,1)
+            return score, totalNoLectures
+        except Exception as e:
+            print(e)
 
     def hackCambridgeTrainInit(self):
         self.createGroup("testgroup", "hello group")
@@ -216,6 +249,9 @@ class FaceID(object):
 #        self.hackCambridgeTrainInit() # Init only once
 #        self.hackCambridgeDatabaseInit(cursor) # Also init only once
         self.listPersonsInGroup("testgroup")
+        print(self.getStudentDetails("0000000", cursor))
+        print(self.getCourseDetails("MATH08057", cursor))
+        print(self.getCourseAttendanceScore("0000000" ,"MATH08057", cursor))
         print('--------------------------')
         self.takeAttendance("1" ,cursor)
 
