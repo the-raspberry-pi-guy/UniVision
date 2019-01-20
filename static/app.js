@@ -9,11 +9,12 @@ setInterval(function()
         url: "http://127.0.0.1:5000/poll",
         success:function(data)
         {
-            jsonData = JSON.parse(data)
+            jsonData = JSON.parse(data);
+            console.log(jsonData);
 
-            if (!(jsonData.ID in students)) {
-                students[jsonData.ID] = "defaultname";
-                dataBody.innerHTML += '<tr><th scope="row">' + jsonData.ID + '</th><td id="velocity" class="text-right">***</td></tr>';
+            if (!(jsonData.id in students)) {
+                students[jsonData.id] = "defaultname";
+                dataBody.innerHTML += '<tr><th scope="row">' + jsonData.name + '</th><td id="student-data" class="text-right">' + jsonData.id + ' ' + jsonData.degree + '</td></tr>';
             }
         }
     });
