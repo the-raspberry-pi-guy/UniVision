@@ -1,6 +1,10 @@
 import http.client, urllib.request, urllib.parse, urllib.error, base64, json, time, requests, cv2, numpy, pyodbc
 
-class FaceID:
+class FaceID(object):
+    """The FaceID Class"""
+
+    conn = http.client.HTTPSConnection('northeurope.api.cognitive.microsoft.com')
+    cam = cv2.VideoCapture(0)
 
     headers = {
         # Request headers
@@ -8,7 +12,7 @@ class FaceID:
         'Ocp-Apim-Subscription-Key': '700bad17d5d6443bad2fd69b0da27cdc',
     }
 
-    def connectSQLDatabase():
+    def connectSQLDatabase(self):
         server = 'univision.database.windows.net'
         database = 'UniVision'
         username = 'adminunivision'
@@ -18,9 +22,7 @@ class FaceID:
         cursor = cnxn.cursor()
         return cursor
 
-    conn = http.client.HTTPSConnection('northeurope.api.cognitive.microsoft.com')
-
-    def createGroup(groupId, groupName):
+    def createGroup(self, groupId, groupName):
 
         params = urllib.parse.urlencode({})
 
@@ -29,14 +31,14 @@ class FaceID:
         }
 
         try:
-            conn.request("PUT", "/face/v1.0/persongroups/" + groupId + "?%s" % params, json.dumps(body), headers)
-            response = conn.getresponse()
+            self.conn.request("PUT", "/face/v1.0/persongroups/" + groupId + "?%s" % params, json.dumps(body), self.headers)
+            response = self.conn.getresponse()
             data = response.read()
             print("GROUP CREATED")
         except Exception as e:
             print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
-    def addPerson(name, targetGroup):
+    def addPerson(self, name, targetGroup):
 
         params = urllib.parse.urlencode({})
 
@@ -45,17 +47,17 @@ class FaceID:
         }
 
         try:
-            conn.request("POST", "/face/v1.0/persongroups/" + targetGroup + "/persons?%s" % params, json.dumps(body), headers)
-            response = conn.getresponse()
+            self.conn.request("POST", "/face/v1.0/persongroups/" + targetGroup + "/persons?%s" % params, json.dumps(body), self.headers)
+            response = self.conn.getresponse()
             data = response.read()
             print("PERSON ADDED: ", name)
         except Exception as e:
             print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
-    def addFace(targetName, targetGroup, URL):
+    def addFace(self, targetName, targetGroup, URL):
 
         # WARNING: going off the assumption that there are no duplicate names
-        listOfPersons = json.loads(listPersonsInGroup(targetGroup))
+        listOfPersons = json.loads(self.listPersonsInGroup(targetGroup))
         personId = ""
         for person in listOfPersons:
             if person["name"] == targetName:
@@ -69,48 +71,46 @@ class FaceID:
         }
 
         try:
-            conn.request("POST", "/face/v1.0/persongroups/" + targetGroup + "/persons/" + personId + "/persistedFaces?%s" % params, json.dumps(body), headers)
-            response = conn.getresponse()
+            self.conn.request("POST", "/face/v1.0/persongroups/" + targetGroup + "/persons/" + personId + "/persistedFaces?%s" % params, json.dumps(body), self.headers)
+            response = self.conn.getresponse()
             data = response.read()
             print("FACE ADDED TO", targetName)
         except Exception as e:
             print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
     # returns a json list of people in a group
-    def listPersonsInGroup(targetGroup):
+    def listPersonsInGroup(self, targetGroup):
 
         params = urllib.parse.urlencode({})
 
         try:
-            conn.request("GET", "/face/v1.0/persongroups/" + targetGroup + "/persons?%s" % params, "{body}", headers)
-            response = conn.getresponse()
+            self.conn.request("GET", "/face/v1.0/persongroups/" + targetGroup + "/persons?%s" % params, "{body}", self.headers)
+            response = self.conn.getresponse()
             data = response.read()
             return data
         except Exception as e:
             print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
-    def trainGroup(targetGroup):
+    def trainGroup(self, targetGroup):
 
         params = urllib.parse.urlencode({})
 
         try:
-            conn.request("POST", "/face/v1.0/persongroups/" + targetGroup + "/train?%s" % params, "{body}", headers)
-            response = conn.getresponse()
+            self.conn.request("POST", "/face/v1.0/persongroups/" + targetGroup + "/train?%s" % params, "{body}", self.headers)
+            response = self.conn.getresponse()
             data = response.read()
             print("GROUP TRAINED")
         except Exception as e:
             print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
-    cam = cv2.VideoCapture(0)
-
-    def takeFrame():
-        s, img = cam.read()
+    def takeFrame(self):
+        s, img = self.cam.read()
         return cv2.imencode(".jpg",img)[1].tostring()
 
     # Returns faceId to be fed into identifyFace, returns -1 (integer) if no face found
-    def detectFace(imgData):
+    def detectFace(self, imgData):
 
-        headers = {'Content-Type': 'application/octet-stream', 
+        detectHeaders = {'Content-Type': 'application/octet-stream', 
                    'Ocp-Apim-Subscription-Key': '700bad17d5d6443bad2fd69b0da27cdc'}
 
         url = 'https://northeurope.api.cognitive.microsoft.com/face/v1.0/detect'
@@ -123,7 +123,7 @@ class FaceID:
 
         try:
             # response = requests.post(url, data=imgData, headers=headers, params=params)
-            response = requests.post(url, headers=headers, data=imgData)
+            response = requests.post(url, headers=detectHeaders, data=imgData)
             print(response)
             return response.json()[0]["faceId"]
         except IndexError:
@@ -132,7 +132,7 @@ class FaceID:
         except Exception as e:
             print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
-    def identifyFace(faceId, targetGroup):
+    def identifyFace(self, faceId, targetGroup):
 
         params = urllib.parse.urlencode({})
 
@@ -142,15 +142,15 @@ class FaceID:
         }
 
         try:
-            conn.request("POST", "/face/v1.0/identify?%s" % params, json.dumps(body), headers)
-            response = conn.getresponse()
+            self.conn.request("POST", "/face/v1.0/identify?%s" % params, json.dumps(body), self.headers)
+            response = self.conn.getresponse()
             data = json.loads(response.read())
 
             if not data or not data[0]["candidates"]:
                 raise IndexError()
 
             candidatePersonId = data[0]["candidates"][0]["personId"]
-            listOfPersons = json.loads(listPersonsInGroup(targetGroup))
+            listOfPersons = json.loads(self.listPersonsInGroup(targetGroup))
             for person in listOfPersons:
                 if person["personId"] == candidatePersonId:
                     print("PERSON IDENTIFIED: " + person["name"])
@@ -161,49 +161,52 @@ class FaceID:
         except Exception as e:
             print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
-    def addStudentToDatabase(id, name, programme, cursor):
+    def addStudentToDatabase(self, id, name, programme, cursor):
         query = "INSERT INTO students (studentID, studentName, studentProgramme) VALUES ('" + id + "', '" + name + "', '" + programme + "');"
         cursor.execute(query)
 
-    def hackCambridgeDataSet():
-        createGroup("testgroup", "hello group")
-        addPerson("0000000", "testgroup")
-        addPerson("1111111", "testgroup")
-        addPerson("2222222", "testgroup")
-        addFace("0000000", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Matt/46854334_1320054438135017_7272253035202478080_o.jpg")
-        addFace("0000000", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Matt/40646988_1267616973378764_4509956788853932032_n.jpg")
-        addFace("0000000", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Matt/50425886_1359944970812630_2846946035958284288_o.jpg")
-        addFace("0000000", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Matt/47173225_1322186427921818_2925789588129579008_o.jpg")
-        addFace("0000000", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Matt/LRM_EXPORT_471358170522868_20181228_220101328-2.jpeg")
-        addFace("1111111", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Neil/IMG_3102.JPG")
-        addFace("1111111", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Neil/IMG_9449.PNG")
-        addFace("1111111", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Neil/vsco5a9442a42aaee.JPG")
-        addFace("1111111", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Neil/IMG_1818.JPG")
-        addFace("2222222", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Raf/raf1.png")
-        addFace("2222222", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Raf/raf2.jpg")
-        addFace("2222222", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Raf/raf3.png")
-        addFace("2222222", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Raf/raf4.png")
-        addFace("2222222", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Raf/raf5.png")
-        trainGroup("testgroup")
+    def hackCambridgeTrainInit(self):
+        self.createGroup("testgroup", "hello group")
+        self.addPerson("0000000", "testgroup")
+        self.addPerson("1111111", "testgroup")
+        self.addPerson("2222222", "testgroup")
+        self.addFace("0000000", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Matt/46854334_1320054438135017_7272253035202478080_o.jpg")
+        self.addFace("0000000", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Matt/40646988_1267616973378764_4509956788853932032_n.jpg")
+        self.addFace("0000000", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Matt/50425886_1359944970812630_2846946035958284288_o.jpg")
+        self.addFace("0000000", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Matt/47173225_1322186427921818_2925789588129579008_o.jpg")
+        self.addFace("0000000", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Matt/LRM_EXPORT_471358170522868_20181228_220101328-2.jpeg")
+        self.addFace("1111111", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Neil/IMG_3102.JPG")
+        self.addFace("1111111", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Neil/IMG_9449.PNG")
+        self.addFace("1111111", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Neil/vsco5a9442a42aaee.JPG")
+        self.addFace("1111111", "testgroup", "httpxs://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Neil/IMG_1818.JPG")
+        self.addFace("2222222", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Raf/raf1.png")
+        self.addFace("2222222", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Raf/raf2.jpg")
+        self.addFace("2222222", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Raf/raf3.png")
+        self.addFace("2222222", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Raf/raf4.png")
+        self.addFace("2222222", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Raf/raf5.png")
+        self.trainGroup("testgroup")
 
-    def hackCambridgeDatabaseSetup():
-        addStudentToDatabase("0000000", "Matt Timmons-Brown", "BEng Computer Science & Electronics", cursor)
-        addStudentToDatabase("1111111", "Neil Weidinger", "BSc Computer Science & Artificial Intelligence", cursor)
-        addStudentToDatabase("2222222", "Rafael Anderka", "BSc Computer Science", cursor)
+    def hackCambridgeDatabaseInit(self):
+        self.addStudentToDatabase("0000000", "Matt Timmons-Brown", "BEng Computer Science & Electronics", cursor)
+        self.addStudentToDatabase("1111111", "Neil Weidinger", "BSc Computer Science & Artificial Intelligence", cursor)
+        self.addStudentToDatabase("2222222", "Rafael Anderka", "BSc Computer Science", cursor)
 
 if __name__ == "__main__":
-    cursor = connectSQLDatabase()
-    # hackCambridgeDataSet() # Init only once
-    listPersonsInGroup("testgroup")
+
+    app = FaceID()
+
+    cursor = app.connectSQLDatabase()
+    app.hackCambridgeTrainInit() # Init only once
+    app.listPersonsInGroup("testgroup")
     time.sleep(2) # should replace this with some method that used the gettrainingstatus api
     print('--------------------------')
 
     try:
         while True:
-            imgData = takeFrame()
-            detectedFaceId = detectFace(imgData)
+            imgData = app.takeFrame()
+            detectedFaceId = app.detectFace(imgData)
             if detectedFaceId != -1:
-                identifyFace(detectedFaceId, "testgroup")
+                app.identifyFace(detectedFaceId, "testgroup")
 
     except KeyboardInterrupt:
         conn.close()
