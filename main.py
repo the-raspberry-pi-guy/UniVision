@@ -5,6 +5,7 @@ class FaceID(object):
 
     conn = http.client.HTTPSConnection('northeurope.api.cognitive.microsoft.com')
     cam = cv2.VideoCapture(0)
+    personScanned = ''
 
     headers = {
         # Request headers
@@ -181,6 +182,10 @@ class FaceID(object):
                             addQuery = "INSERT INTO attendance (studentID, timetableKey) VALUES ('" + studentId + "', '" + timetableKey + "');"
                             cursor.execute(addQuery)
                             cursor.commit()
+
+                            self.personScanned = studentId
+                            print("self.personScanned:")
+                            print(self.personScanned)
         except KeyboardInterrupt:
             self.conn.close()
 

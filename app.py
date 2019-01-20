@@ -1,7 +1,9 @@
 from flask import Flask, render_template, request
 import main as UV
+import json
 
 app = Flask(__name__)
+attendanceApp = UV.FaceID()
 
 @app.route("/")
 def index():
@@ -14,5 +16,11 @@ def courses():
 
     # POST request
     else:
-        attendanceApp = UV.FaceID()
         attendanceApp.main()
+
+@app.route("/poll")
+def poll():
+    print(attendanceApp.personScanned)
+    personScannedData = '{ "ID" : "1111111"}'
+    return personScannedData
+    # return attendanceApp.personScanned
