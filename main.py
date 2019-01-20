@@ -209,13 +209,49 @@ class FaceID(object):
             cursor.execute(retrieveTotalNoLecturesQuery)
             totalNoLectures = len(cursor.fetchall())
 
-            retrieveTotalNoAttendancesQuery = "SELECT attendanceKey FROM attendance WHERE (studentID = '" + studentId + "');"
-            cursor.execute(retrieveTotalNoAttendancesQuery)
-            totalNoAttendences = len(cursor.fetchall())
-            score = round((totalNoAttendences/totalNoLectures)*100,1)
-            return score, totalNoLectures
+            retrieveAllAttendancesQuery = "SELECT * FROM attendance WHERE (studentID = '" + studentId + "');"
+            cursor.execute(retrieveAllAttendancesQuery)
+            allAttendances = cursor.fetchall()
+
+            print(allAttendances)
+
+            totalNoAttendances = 0
+            for attendance in allAttendances:
+                attendanceQuery = "SELECT courseID FROM timetable WHERE timetableKey = '" + str(attendance[2]) + "';"
+                cursor.execute(attendanceQuery)
+                lectureCourseId = cursor.fetchone()
+                if lectureCourseId:
+                  if lectureCourseId[0] == courseId:
+                      totalNoAttendances += 1
+
+            score = round((totalNoAttendances/totalNoLectures)*100,1)
+            return score, totalNoAttendances, totalNoLectures
         except Exception as e:
             print(e)
+
+
+    def getOverallAttendanceScore(self, studentId, cursor):
+        try:
+            retrieveStudentCourseChoicesQuery = "SELECT courseID FROM studentsCourseChoices WHERE studentID = '" + studentId + "';"
+            cursor.execute(retrieveStudentCourseChoicesQuery)
+            studentChoices = cursor.fetchall()
+            print(studentChoices)
+
+            attendanceSum = 0
+            lectureSum = 0
+            for course in studentChoices:
+                _, attendanceNo, lectureNo = self.getCourseAttendanceScore(studentId, course[0], cursor)
+                attendanceSum += attendanceNo
+                lectureSum += lectureNo
+
+            print(attendanceSum)
+            print(lectureSum)
+            totalScore = round((attendanceSum / lectureSum) * 100, 1)
+            print(totalScore)
+            return totalScore
+
+        except Exception as e:
+            print(e)  
 
     def hackCambridgeTrainInit(self):
         self.createGroup("testgroup", "hello group")
@@ -252,6 +288,7 @@ class FaceID(object):
         print(self.getStudentDetails("0000000", cursor))
         print(self.getCourseDetails("MATH08057", cursor))
         print(self.getCourseAttendanceScore("0000000" ,"MATH08057", cursor))
+        print(self.getOverallAttendanceScore("0000000", cursor))
         print('--------------------------')
         self.takeAttendance("1" ,cursor)
 
