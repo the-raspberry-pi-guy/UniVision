@@ -154,7 +154,7 @@ class FaceID(object):
             for person in listOfPersons:
                 if person["personId"] == candidatePersonId:
                     print("PERSON IDENTIFIED: " + person["name"])
-                    break
+                    return person["name"]
 
         except IndexError:
             print("***** Idk something went wrong *****")
@@ -164,6 +164,19 @@ class FaceID(object):
     def addStudentToDatabase(self, id, name, programme, cursor):
         query = "INSERT INTO students (studentID, studentName, studentProgramme) VALUES ('" + id + "', '" + name + "', '" + programme + "');"
         cursor.execute(query)
+
+    def takeAttendance(self, lectureId, cursor):
+        try:
+            while True:
+                imgData = self.takeFrame()
+                detectedFaceId = self.detectFace(imgData)
+                if detectedFaceId != -1:
+                    studentId = self.identifyFace(detectedFaceId, "testgroup")
+
+        except KeyboardInterrupt:
+            self.conn.close()
+
+
 
     def hackCambridgeTrainInit(self):
         self.createGroup("testgroup", "hello group")
@@ -185,6 +198,7 @@ class FaceID(object):
         self.addFace("2222222", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Raf/raf4.png")
         self.addFace("2222222", "testgroup", "https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/Faces/Raf/raf5.png")
         self.trainGroup("testgroup")
+        time.sleep(2) # Give a second to train database
 
     def hackCambridgeDatabaseInit(self):
         self.addStudentToDatabase("0000000", "Matt Timmons-Brown", "BEng Computer Science & Electronics", cursor)
@@ -195,18 +209,7 @@ class FaceID(object):
         cursor = self.connectSQLDatabase()
         self.hackCambridgeTrainInit() # Init only once
         self.listPersonsInGroup("testgroup")
-        time.sleep(2) # should replace this with some method that used the gettrainingstatus api
         print('--------------------------')
-
-        try:
-            while True:
-                imgData = self.takeFrame()
-                detectedFaceId = self.detectFace(imgData)
-                if detectedFaceId != -1:
-                    self.identifyFace(detectedFaceId, "testgroup")
-
-        except KeyboardInterrupt:
-            self.conn.close()
 
 if __name__ == "__main__":
     app = FaceID()
