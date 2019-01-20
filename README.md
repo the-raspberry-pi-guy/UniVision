@@ -27,7 +27,7 @@ Meanwhile, at the front of the classroom, the teacher can monitor in real-time t
 
 IMAGE OF STUDENTS NAMES
 
-We have also integrated other features into our Python library, including providing an interface for students to see what courses they are taking, as well as monitoring their specific course and overall attendance.
+We have also integrated many other advanced SQL-based features into our Python library, including providing an interface for teachers and students to see what courses they are taking, their attendance in each of the student's courses and their overall attendance.
 
 # Solution Details
 
