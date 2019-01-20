@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 import main as UV
 import json
 
@@ -18,13 +18,18 @@ def courses():
     else:
         attendanceApp.main()
 
-@app.route("/list")
+@app.route("/list", methods=["GET", "POST"])
 def list():
-    coursesList = attendanceApp.getCoursesJson()
-    coursesListOfDicts = []
-    for course in coursesList:
-        coursesListOfDicts.append(json.loads(course))
-    return render_template("list.html", coursesList=coursesListOfDicts)
+    if request.method == "GET":
+        coursesList = attendanceApp.getCoursesJson()
+        coursesListOfDicts = []
+        for course in coursesList:
+            coursesListOfDicts.append(json.loads(course))
+        return render_template("list.html", coursesList=coursesListOfDicts)
+
+    # POST request
+    else:
+        return redirect("/list")
 
 @app.route("/poll")
 def poll():

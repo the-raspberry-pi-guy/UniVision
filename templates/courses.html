@@ -10,11 +10,9 @@
             <img src="../static/UniVision_logo.png" class="img-fluid" alt="UniVision logo">
         </div>
         <div class="col-md">
-            <form class="form-inline">
+            <form action="/list" method="post" class="form-inline">
                 <div class="form-group">
-                    <label for="connect">Courses right now:</label>
-                    <button id="connect" class="btn btn-success btn-lg ml-3 mr-1" type="submit">Calc</button>
-                    <button id="disconnect" class="btn btn-success btn-lg mx-1" type="submit" disabled="disabled">ILA</button>
+                    <button id="list" class="btn btn-primary btn-lg ml-3 mr-1" type="submit">Overview of Courses</button>
                 </div>
             </form>
         </div>
@@ -22,8 +20,8 @@
             <form class="form-inline float-right">
                 <div class="form-group">
                     <label for="attendance">Attendance:</label>
-                    <button id="stop" class="btn btn-success btn-lg ml-3 mr-1" type="submit">Stop</button>
-                    <button id="start" class="btn btn-success btn-lg mx-1" type="submit">Start</button>
+                    <button id="stop" class="btn btn-primary btn-lg ml-3 mr-1" type="submit">Stop</button>
+                    <button id="start" class="btn btn-primary btn-lg mx-1" type="submit">Start</button>
                 </div>
             </form>
         </div>
