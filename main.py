@@ -330,7 +330,6 @@ class FaceID(object):
         #print(self.getOverallAttendanceScore("0000000"))
         #self.getStudentJson("0000000")
         #print(self.getLectureAttendance("8"))
->>>>>>> gui
         self.wipeAttendanceLog("1")
         print('--------------------------')
         self.takeAttendance("1")
