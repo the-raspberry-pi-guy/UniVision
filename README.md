@@ -11,7 +11,7 @@ A fact that many students do not like to own up to is that attendance at lecture
 # Our Solution
 We set about trying to solve this problem by creating a much more reliable system of attendance, using cloud-based image recognition - trained on small sets of user-provided photos of students. This is faster than a Professor calling out a register, and more resilient to being "cheated". For example, using UniVision, it is not possible for one student to mark another present when they are not.
 
-The idea behind our principle is for a camera to be mounted near the door to a lecture theatre. Before a lecture begins, the teacher can access our web interface and select which class they are about to teach. They can then press the "Start" button, which commences the video feed, and students can enter the room.
+The principle behind our idea is for a camera to be mounted near the door to a lecture theatre. Before a lecture begins, the teacher can access our web interface and select which class they are about to teach. They can then press the "Start" button, which commences the video feed, and students can enter the room.
 
 IMAGE OF WEB INTERFACE
 
