@@ -294,16 +294,7 @@ class FaceID(object):
 
     def main(self):
         cursor = self.connectSQLDatabase()
-<<<<<<< HEAD
         cv2.namedWindow("preview")
-        #self.hackCambridgeTrainInit() # Init only once
-        #self.hackCambridgeDatabaseInit(cursor) # Also init only once
-        self.listPersonsInGroup("testgroup")
-        #print(self.getStudentDetails("0000000", cursor))
-        #print(self.getCourseDetails("MATH08057", cursor))
-        #print(self.getCourseAttendanceScore("0000000" ,"MATH08057", cursor)[0])
-        #print(self.getOverallAttendanceScore("0000000", cursor))
-=======
 #        self.hackCambridgeTrainInit() # Init only once
 #        self.hackCambridgeDatabaseInit(cursor) # Also init only once
         #self.listPersonsInGroup("testgroup")
@@ -312,7 +303,6 @@ class FaceID(object):
         #print(self.getCourseAttendanceScore("0000000" ,"MATH08057", cursor))
         #print(self.getOverallAttendanceScore("0000000", cursor))
         self.wipeAttendanceLog("1", cursor)
->>>>>>> e8e1d32c7826e6fa232f1d1a932caae25eabe4fa
         print('--------------------------')
         self.takeAttendance("1" ,cursor)
 
