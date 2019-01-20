@@ -15,7 +15,7 @@ The principle behind our idea is for a camera to be mounted near the door to a l
 
 IMAGE OF WEB INTERFACE
 
-When the web interface is started, the camera feed begins to stream information. This binary data is sent to the Microsoft Azure Face API, which can be pre-trained with a set of images for the students in a class. Due to the advanced nature of the Face API, only a small sample of user-uploaded images are required to train the database and identify people.
+When the web interface is started, the camera feed begins to stream information. This binary data is sent to the Microsoft Azure Face API, which we have pre-trained with a set of images for the students in a class. Due to the advanced nature of the Face API, only a small sample of user-uploaded images are required to train the database and identify people.
 
 ![alt text](https://github.com/the-raspberry-pi-guy/UniVision/blob/master/images/demo1.gif?raw=true)
 
