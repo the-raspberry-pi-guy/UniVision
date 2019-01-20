@@ -1,0 +1,10 @@
+/* remove top border line over table */
+.table > tbody > tr:first-child > th {
+    border: none;
+}
+
+/* remove top border line over table and align text */
+.table > tbody > tr:first-child > td {
+    border: none;
+    align: right;
+}
