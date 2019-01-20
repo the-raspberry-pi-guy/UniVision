@@ -13,7 +13,7 @@ We set about trying to solve this problem by creating a much more reliable syste
 
 The principle behind our idea is for a camera to be mounted near the door to a lecture theatre. Before a lecture begins, the teacher can access our web interface and select which class they are about to teach. They can then press the "Start" button, which commences the video feed, and students can enter the room.
 
-IMAGE OF WEB INTERFACE
+![alt text](https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/images/2.jpg)
 
 When the web interface is started, the camera feed begins to stream information. This binary data is sent to the Microsoft Azure Face API, which we have pre-trained with a set of images for the students in a class. Due to the advanced nature of the Face API, only a small sample of user-uploaded images are required to train the database and identify people.
 
@@ -25,9 +25,9 @@ We have then programmed the interface with Azure services and, after this stage,
 
 Meanwhile, at the front of the classroom, the teacher can monitor in real-time the students that are currently in their class. Before they start lecturing, they can disable the attendance by simply pressing "Stop".
 
-IMAGE OF STUDENTS NAMES
-
 We have also integrated many other advanced SQL-based features into our Python library, including providing an interface for teachers and students to see what courses they are taking, their attendance in each of the student's courses and their overall attendance.
+
+![alt text](https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/images/1.jpg)
 
 # Solution Details
 
