@@ -209,4 +209,4 @@ if __name__ == "__main__":
                 app.identifyFace(detectedFaceId, "testgroup")
 
     except KeyboardInterrupt:
-        conn.close()
+        app.conn.close()
