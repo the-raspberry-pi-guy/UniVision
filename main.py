@@ -381,7 +381,33 @@ class FaceID(object):
             return jsonObjects
 
         except Exception as e:
-            print(e)  
+            print(e)
+
+    def getEventsJson(self,courseId):
+        try:
+            courseDetails = self.getCourseDetails(courseId)
+
+            getTimetable = "SELECT * FROM timetable WHERE courseID = '" + courseId + "';"
+            cursor.execute(getTimetable)
+            timetable = cursor.fetchall()
+
+            jsonObjects = []
+            for event in timetable:
+                attendance = self.getLectureAttendance(str(event[0]))
+
+                eventDict = {
+                "eventName" : event[4] + " - " + courseDetails[2],
+                "start" : event[2],
+                "end" : event[3],
+                "attendance" : attendance
+                }
+
+                jsonObjects.append(json.dumps(eventDict))
+
+            return jsonObjects
+
+        except Exception as e:
+            print(e)
 
     def main(self):
         #self.hackCambridgeTrainInit() # Init only once
@@ -396,6 +422,7 @@ class FaceID(object):
         #print(self.getCourseAttendance("MATH08057"))
         #print(self.getTimetableKeysFromCourseId("MATH08057"))
         #self.getCoursesJson()
+        #self.getEventsJson("MATH08057")
         self.wipeAttendanceLog("1")
         print('--------------------------')
         self.takeAttendance("1")
