@@ -31,12 +31,16 @@ We have also integrated other features into our Python library, including provid
 
 # Solution Details
 
-Despite never having used it before, you'll be able to tell that we aimed to use the Azure services provided by Microsoft to the max. All of our code can be viewed in this repository:
+Despite never having used it before, we were very impressed by and found the Microsoft Azure API to be highly capable, easy-to-use and reliable. All of our code can be viewed in this repository:
 - The main body of code is written in Python and handles the image stream, compiling photos and training the image recognition, as well as sending data to be processed by Microsoft Azure. This code also contains methods for remote SQL database operations and attendance functions etc.
 - The SQL database is hosted in the cloud using Azure services, and can be edited either directly using Microsoft's tools, or through our Python methods for adding students and other information.
 - The web interface is a Python Flask app and interfaces between the main code and SQL database, triggering events and displaying information to the user.
 
 # Ideas for Improvements
+
+As a project developed in only 24 hours, there are many areas for improvement and further modifications. Here are some of our ideas:
+- Improve the web interface to include more features, like a calendar and interactive attendance features
+- Scale UniVison to be a University-wide system and incorporate other interfaces, like a library feature for taking out books, or a security system for access to restricted parts of campus and accommodation
 
 # Authors
 
