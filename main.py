@@ -126,10 +126,10 @@ class FaceID(object):
         try:
             # response = requests.post(url, data=imgData, headers=headers, params=params)
             response = requests.post(url, headers=detectHeaders, data=imgData)
-            return response.json()[0]["faceId"], response.json()[0]["faceRectangle"]
+            return response.json()[0]["faceId"]
         except IndexError:
             print("NO FACE DETECTED")
-            return -1, -1
+            return -1
         except Exception as e:
             print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
@@ -171,13 +171,10 @@ class FaceID(object):
         try:
             while True:
                 img, imgData = self.takeFrame()
-                detectedFaceId, faceRectangle = self.detectFace(imgData)
+                detectedFaceId = self.detectFace(imgData)
                 if detectedFaceId != -1:
                     studentId = self.identifyFace(detectedFaceId, "testgroup")
                     if studentId:
-                        cv2.rectangle(img,(faceRectangle.get("left"),faceRectangle.get("top")),(faceRectangle.get("left") + faceRectangle.get("width"),faceRectangle.get("top") + faceRectangle.get("height")),(255,0,0),2)
-                        cv2.imshow("preview",img)
-                        cv2.waitKey(1)
                         checkPresentQuery = "SELECT * FROM attendance WHERE (studentID = '" + studentId + "' AND timetableKey = '" + timetableKey + "');"
                         cursor.execute(checkPresentQuery)
                         data = cursor.fetchone()
@@ -189,12 +186,6 @@ class FaceID(object):
                             self.personScanned = studentId
                         else:
                             print('Attendance already taken')
-                    else:
-                        cv2.imshow("preview",img)
-                        cv2.waitKey(1)
-                else:
-                    cv2.imshow("preview",img)
-                    cv2.waitKey(1)
         except KeyboardInterrupt:
             self.conn.close()
 
@@ -296,9 +287,8 @@ class FaceID(object):
 
     def main(self):
         cursor = self.connectSQLDatabase()
-        cv2.namedWindow("preview")
-#        self.hackCambridgeTrainInit() # Init only once
-#        self.hackCambridgeDatabaseInit(cursor) # Also init only once
+        #self.hackCambridgeTrainInit() # Init only once
+        #self.hackCambridgeDatabaseInit(cursor) # Also init only once
         #self.listPersonsInGroup("testgroup")
         #print(self.getStudentDetails("0000000", cursor))
         #print(self.getCourseDetails("MATH08057", cursor))
