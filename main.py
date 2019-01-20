@@ -335,6 +335,29 @@ class FaceID(object):
 
         return json.dumps(studentDetailsDict)
 
+    def getCoursesJson(self):
+        try:
+            getCoursesQuery = "SELECT * FROM courses"
+            cursor.execute(getCoursesQuery)
+            courses = cursor.fetchall()
+
+            jsonObjects = []
+            for course in courses:
+                
+                courseDict = {
+                "courseID" : course[1],
+                "courseName" : course[2],
+                "school" : course[3],
+                "courseAbbreviation" : course[4]
+                }
+            
+                jsonObjects.append(json.dumps(courseDict))
+
+            return jsonObjects
+
+        except Exception as e:
+            print(e)  
+
     def main(self):
         #self.hackCambridgeTrainInit() # Init only once
         #self.hackCambridgeDatabaseInit() # Also init only once
@@ -345,6 +368,7 @@ class FaceID(object):
         #print(self.getOverallAttendanceScore("0000000"))
         #self.getStudentJson("0000000")
         #print(self.getLectureAttendance("8"))
+        self.getCoursesJson()
         print(self.getTimetableKeysFromCourseId("MATH08057"))
         self.wipeAttendanceLog("1")
         print('--------------------------')
