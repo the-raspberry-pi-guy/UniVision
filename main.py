@@ -191,22 +191,23 @@ class FaceID(object):
         self.addStudentToDatabase("1111111", "Neil Weidinger", "BSc Computer Science & Artificial Intelligence", cursor)
         self.addStudentToDatabase("2222222", "Rafael Anderka", "BSc Computer Science", cursor)
 
+    def main(self):
+        cursor = self.connectSQLDatabase()
+        self.hackCambridgeTrainInit() # Init only once
+        self.listPersonsInGroup("testgroup")
+        time.sleep(2) # should replace this with some method that used the gettrainingstatus api
+        print('--------------------------')
+
+        try:
+            while True:
+                imgData = self.takeFrame()
+                detectedFaceId = self.detectFace(imgData)
+                if detectedFaceId != -1:
+                    self.identifyFace(detectedFaceId, "testgroup")
+
+        except KeyboardInterrupt:
+            self.conn.close()
+
 if __name__ == "__main__":
-
     app = FaceID()
-
-    cursor = app.connectSQLDatabase()
-    app.hackCambridgeTrainInit() # Init only once
-    app.listPersonsInGroup("testgroup")
-    time.sleep(2) # should replace this with some method that used the gettrainingstatus api
-    print('--------------------------')
-
-    try:
-        while True:
-            imgData = app.takeFrame()
-            detectedFaceId = app.detectFace(imgData)
-            if detectedFaceId != -1:
-                app.identifyFace(detectedFaceId, "testgroup")
-
-    except KeyboardInterrupt:
-        app.conn.close()
+    app.main()
