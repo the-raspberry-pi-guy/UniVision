@@ -253,6 +253,14 @@ class FaceID(object):
         except Exception as e:
             print(e)  
 
+    def wipeAttendanceLog(self, timetableKey, cursor):
+        try:
+            wipeAttendanceQuery = "DELETE FROM attendance WHERE timetableKey = '" + timetableKey + "';"
+            cursor.execute(wipeAttendanceQuery)
+            cursor.commit()
+        except Exception as e:
+            print(e)  
+
     def hackCambridgeTrainInit(self):
         self.createGroup("testgroup", "hello group")
         self.addPerson("0000000", "testgroup")
@@ -284,11 +292,12 @@ class FaceID(object):
         cursor = self.connectSQLDatabase()
 #        self.hackCambridgeTrainInit() # Init only once
 #        self.hackCambridgeDatabaseInit(cursor) # Also init only once
-        self.listPersonsInGroup("testgroup")
-        print(self.getStudentDetails("0000000", cursor))
-        print(self.getCourseDetails("MATH08057", cursor))
-        print(self.getCourseAttendanceScore("0000000" ,"MATH08057", cursor))
-        print(self.getOverallAttendanceScore("0000000", cursor))
+        #self.listPersonsInGroup("testgroup")
+        #print(self.getStudentDetails("0000000", cursor))
+        #print(self.getCourseDetails("MATH08057", cursor))
+        #print(self.getCourseAttendanceScore("0000000" ,"MATH08057", cursor))
+        #print(self.getOverallAttendanceScore("0000000", cursor))
+        self.wipeAttendanceLog("1", cursor)
         print('--------------------------')
         self.takeAttendance("1" ,cursor)
 
