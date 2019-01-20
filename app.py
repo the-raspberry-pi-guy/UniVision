@@ -21,6 +21,5 @@ def courses():
 @app.route("/poll")
 def poll():
     print(attendanceApp.personScanned)
-    personScannedData = '{ "ID" : "1111111"}'
+    personScannedData = '{"ID" : "' + attendanceApp.personScanned + '"}'
     return personScannedData
-    # return attendanceApp.personScanned
