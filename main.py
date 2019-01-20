@@ -105,7 +105,8 @@ class FaceID(object):
 
     def takeFrame(self):
         s, img = self.cam.read()
-        return cv2.imencode(".jpg",img)[1].tostring()
+        return img, cv2.imencode(".jpg",img)[1].tostring()
+
 
     # Returns faceId to be fed into identifyFace, returns -1 (integer) if no face found
     def detectFace(self, imgData):
@@ -124,11 +125,10 @@ class FaceID(object):
         try:
             # response = requests.post(url, data=imgData, headers=headers, params=params)
             response = requests.post(url, headers=detectHeaders, data=imgData)
-            print(response)
-            return response.json()[0]["faceId"]
+            return response.json()[0]["faceId"], response.json()[0]["faceRectangle"]
         except IndexError:
             print("NO FACE DETECTED")
-            return -1
+            return -1, -1
         except Exception as e:
             print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
@@ -169,11 +169,14 @@ class FaceID(object):
     def takeAttendance(self, timetableKey, cursor):
         try:
             while True:
-                imgData = self.takeFrame()
-                detectedFaceId = self.detectFace(imgData)
+                img, imgData = self.takeFrame()
+                detectedFaceId, faceRectangle = self.detectFace(imgData)
                 if detectedFaceId != -1:
                     studentId = self.identifyFace(detectedFaceId, "testgroup")
                     if studentId:
+                        cv2.rectangle(img,(faceRectangle.get("left"),faceRectangle.get("top")),(faceRectangle.get("left") + faceRectangle.get("width"),faceRectangle.get("top") + faceRectangle.get("height")),(255,0,0),2)
+                        cv2.imshow("preview",img)
+                        cv2.waitKey(1)
                         checkPresentQuery = "SELECT * FROM attendance WHERE (studentID = '" + studentId + "' AND timetableKey = '" + timetableKey + "');"
                         cursor.execute(checkPresentQuery)
                         data = cursor.fetchone()
@@ -184,6 +187,12 @@ class FaceID(object):
                             cursor.commit()
                         else:
                             print('Attendance already taken')
+                    else:
+                        cv2.imshow("preview",img)
+                        cv2.waitKey(1)
+                else:
+                    cv2.imshow("preview",img)
+                    cv2.waitKey(1)
         except KeyboardInterrupt:
             self.conn.close()
 
@@ -192,16 +201,16 @@ class FaceID(object):
             retrieveDetailsQuery = "SELECT * FROM students WHERE (studentID = '" + studentId + "');"
             cursor.execute(retrieveDetailsQuery)
             return cursor.fetchone()
-        except:
-            print("Error in getStudentName")
+        except Exception as e:
+            print(e)
 
     def getCourseDetails(self, courseId, cursor):
         try:
             retrieveCourseQuery = "SELECT * FROM courses WHERE (courseID = '" + courseId + "');"
             cursor.execute(retrieveCourseQuery)
             return cursor.fetchone()
-        except:
-            print("Error in getCourseDetails")
+        except Exception as e:
+            print(e)
 
     def getCourseAttendanceScore(self, studentId, courseId, cursor):
         try:
@@ -212,8 +221,6 @@ class FaceID(object):
             retrieveAllAttendancesQuery = "SELECT * FROM attendance WHERE (studentID = '" + studentId + "');"
             cursor.execute(retrieveAllAttendancesQuery)
             allAttendances = cursor.fetchall()
-
-            print(allAttendances)
 
             totalNoAttendances = 0
             for attendance in allAttendances:
@@ -235,19 +242,16 @@ class FaceID(object):
             retrieveStudentCourseChoicesQuery = "SELECT courseID FROM studentsCourseChoices WHERE studentID = '" + studentId + "';"
             cursor.execute(retrieveStudentCourseChoicesQuery)
             studentChoices = cursor.fetchall()
-            print(studentChoices)
 
             attendanceSum = 0
             lectureSum = 0
+
             for course in studentChoices:
                 _, attendanceNo, lectureNo = self.getCourseAttendanceScore(studentId, course[0], cursor)
                 attendanceSum += attendanceNo
                 lectureSum += lectureNo
 
-            print(attendanceSum)
-            print(lectureSum)
             totalScore = round((attendanceSum / lectureSum) * 100, 1)
-            print(totalScore)
             return totalScore
 
         except Exception as e:
@@ -282,13 +286,14 @@ class FaceID(object):
 
     def main(self):
         cursor = self.connectSQLDatabase()
-#        self.hackCambridgeTrainInit() # Init only once
-#        self.hackCambridgeDatabaseInit(cursor) # Also init only once
+        cv2.namedWindow("preview")
+        #self.hackCambridgeTrainInit() # Init only once
+        #self.hackCambridgeDatabaseInit(cursor) # Also init only once
         self.listPersonsInGroup("testgroup")
-        print(self.getStudentDetails("0000000", cursor))
-        print(self.getCourseDetails("MATH08057", cursor))
-        print(self.getCourseAttendanceScore("0000000" ,"MATH08057", cursor))
-        print(self.getOverallAttendanceScore("0000000", cursor))
+        #print(self.getStudentDetails("0000000", cursor))
+        #print(self.getCourseDetails("MATH08057", cursor))
+        #print(self.getCourseAttendanceScore("0000000" ,"MATH08057", cursor)[0])
+        #print(self.getOverallAttendanceScore("0000000", cursor))
         print('--------------------------')
         self.takeAttendance("1" ,cursor)
 
