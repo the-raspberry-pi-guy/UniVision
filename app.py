@@ -20,6 +20,6 @@ def courses():
 
 @app.route("/poll")
 def poll():
-    print(attendanceApp.personScanned)
-    personScannedData = '{"ID" : "' + attendanceApp.personScanned + '"}'
+    lastPersonScannedId = attendanceApp.getLastPersonScanned()
+    personScannedData = '{"ID" : "' + lastPersonScannedId + '"}'
     return personScannedData
