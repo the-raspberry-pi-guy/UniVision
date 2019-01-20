@@ -18,6 +18,10 @@ def courses():
     else:
         attendanceApp.main()
 
+@app.route("/list")
+def list():
+    return render_template("list.html")
+
 @app.route("/poll")
 def poll():
     lastPersonScannedId = attendanceApp.getLastPersonScanned()
