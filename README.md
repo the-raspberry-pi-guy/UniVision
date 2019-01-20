@@ -15,6 +15,27 @@ The idea behind our principle is for a camera to be mounted near the door to a l
 
 IMAGE OF WEB INTERFACE
 
+When the web interface is started, the camera feed begins to stream information. This binary data is sent to the Microsoft Azure Face API, which can be pre-trained with a set of images for the students in a class. Due to the advanced nature of the Face API, only a small sample of user-uploaded images are required to train the database and identify people.
 
+IMAGE OF FACE RECOGNTION
+
+We have then programmed the interface with Azure services and, after this stage, for each frame of video any identification is passed back to the program. When a student is recognised, their unique Univeristy number (Student ID) is stored in an SQL database, also hosted in the cloud using Azure web services. This data is linked to other fields and information,like student name, their prior attendance and courses they are studying.
+
+IMAGE OF DATABASE
+
+Meanwhile, at the front of the classroom, the teacher can monitor in real-time the students that are currently in their class. Before they start lecturing, they can disable the attendance by simply pressing "Stop".
+
+IMAGE OF STUDENTS NAMES
+
+We have also integrated other features into our Python library, including providing an interface for students to see what courses they are taking, as well as monitoring their specific course and overall attendance.
+
+# Solution Details
+
+Despite never having used it before, you'll be able to tell that we aimed to use the Azure services provided by Microsoft to the max. All of our code can be viewed in this repository:
+- The main body of code is written in Python and handles the image stream, compiling photos and training the image recognition, as well as sending data to be processed by Microsoft Azure. This code also contains methods for remote SQL database operations and attendance functions etc.
+- The SQL database is hosted in the cloud using Azure services, and can be edited either directly using Microsoft's tools, or through our Python methods for adding students and other information.
+- The web interface is a Python Flask app and interfaces between the main code and SQL database, triggering events and displaying information to the user.
+
+# Ideas for Improvements
 
 Edinburgh University - Matt Timmons-Brown, Neil Weidinger, Rafael Anderka
