@@ -38,4 +38,8 @@ Despite never having used it before, you'll be able to tell that we aimed to use
 
 # Ideas for Improvements
 
-Edinburgh University - Matt Timmons-Brown, Neil Weidinger, Rafael Anderka
+# Authors
+
+This is a Hack Cambridge 4D project, completely designed, coded and implemented in 24 hours, from 12pm on January 19th - January 20th.
+
+It's authors are Matt Timmons-Brown, Neil Weidinger, Rafael Anderka - 1st year Computer Science students at the University of Edinburgh
