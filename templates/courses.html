@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Courses
+{% endblock %}
+
+{% block main %}
+    <div class="row align-items-center mt-5 mx-3">
+        <div class="col-md">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="connect">Courses right now:</label>
+                    <button id="connect" class="btn btn-success btn-lg ml-3 mr-1" type="submit">Calc</button>
+                    <button id="disconnect" class="btn btn-success btn-lg mx-1" type="submit" disabled="disabled">ILA</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md">
+            <form class="form-inline float-right">
+                <div class="form-group">
+                    <label for="attendance">Attendance:</label>
+                    <button id="stop" class="btn btn-success btn-lg ml-3 mr-1" type="submit">Stop</button>
+                    <button id="start" class="btn btn-success btn-lg mx-1" type="submit">Start</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <table id="data" class="table table-hover">
+                <tbody>
+                    <tr>
+                        <th scope="row">Velocity</th>
+                        <td id="velocity" class="text-right">***</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
