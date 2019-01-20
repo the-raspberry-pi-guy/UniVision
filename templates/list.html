@@ -13,7 +13,21 @@
     <div class="row mt-3">
         <div class="col">
             <table id="data" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Course</th>
+                        <th scope="col" class="text-right">ID</td>
+                        <th scope="col" class="text-right">School</td>
+                    </tr>
+                </thead>
                 <tbody id="data-body">
+                    {% for course in coursesList %}
+                        <tr>
+                            <th scope="row">{{ course["courseName"]  }}</th>
+                            <td class="text-right">{{ course["courseID"] }}</td>
+                            <td class="text-right">{{ course["school"] }}</td>
+                        </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>

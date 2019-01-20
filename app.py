@@ -20,7 +20,11 @@ def courses():
 
 @app.route("/list")
 def list():
-    return render_template("list.html")
+    coursesList = attendanceApp.getCoursesJson()
+    coursesListOfDicts = []
+    for course in coursesList:
+        coursesListOfDicts.append(json.loads(course))
+    return render_template("list.html", coursesList=coursesListOfDicts)
 
 @app.route("/poll")
 def poll():
