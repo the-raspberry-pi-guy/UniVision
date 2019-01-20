@@ -274,9 +274,31 @@ class FaceID(object):
 
             getRegisteredStudents = "SELECT * FROM studentsCourseChoices WHERE courseID = '" + courseId[0] + "';"
             cursor.execute(getRegisteredStudents)
-            registeredStudents = cursor.fetchone()
+            registeredStudents = cursor.fetchall()
 
             score = round(len(attendedStudents)/len(registeredStudents)*100,2)
+            return score
+
+        except Exception as e:
+            print(e)
+
+    def getCourseAttendance(self, courseId):
+        try:
+            timetableKeys = self.getTimetableKeysFromCourseId(courseId)
+
+            totalAttendees = 0
+            for event in timetableKeys:
+                getNoAttendees = "SELECT * FROM attendance WHERE timetableKey = '" + str(event) + "';"
+                cursor.execute(getNoAttendees)
+                attendeesNo = len(cursor.fetchall())
+                totalAttendees += attendeesNo
+            
+            getRegisteredStudents = "SELECT * FROM studentsCourseChoices where courseID = '" + courseId + "';"
+            cursor.execute(getRegisteredStudents)
+            registeredStudents = len(cursor.fetchall())
+
+            score = round(totalAttendees/(registeredStudents*len(timetableKeys)) * 100, 1)
+
             return score
 
         except Exception as e:
@@ -344,15 +366,18 @@ class FaceID(object):
             jsonObjects = []
             for course in courses:
                 
+                attendance = self.getCourseAttendance(course[1])
+
                 courseDict = {
                 "courseID" : course[1],
                 "courseName" : course[2],
                 "school" : course[3],
-                "courseAbbreviation" : course[4]
+                "courseAbbreviation" : course[4],
+                "attendance" : attendance
                 }
             
                 jsonObjects.append(json.dumps(courseDict))
-
+            
             return jsonObjects
 
         except Exception as e:
@@ -368,8 +393,9 @@ class FaceID(object):
         #print(self.getOverallAttendanceScore("0000000"))
         #self.getStudentJson("0000000")
         #print(self.getLectureAttendance("8"))
-        self.getCoursesJson()
-        print(self.getTimetableKeysFromCourseId("MATH08057"))
+        #print(self.getCourseAttendance("MATH08057"))
+        #print(self.getTimetableKeysFromCourseId("MATH08057"))
+        #self.getCoursesJson()
         self.wipeAttendanceLog("1")
         print('--------------------------')
         self.takeAttendance("1")
