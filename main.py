@@ -282,6 +282,21 @@ class FaceID(object):
         except Exception as e:
             print(e)
 
+    def getTimetableKeysFromCourseId(self, courseId):
+        try:
+            getTimetableQuery = "SELECT timetableKey FROM timetable WHERE courseID = '" + courseId + "';"
+            cursor.execute(getTimetableQuery)
+            timetable = cursor.fetchall()
+
+            timetableKeys = []
+            for event in timetable:
+                timetableKeys.append(event[0])
+
+            return timetableKeys
+
+        except Exception as e:
+            print(e)  
+
     def hackCambridgeTrainInit(self):
         self.createGroup("testgroup", "hello group")
         self.addPerson("0000000", "testgroup")
@@ -330,6 +345,7 @@ class FaceID(object):
         #print(self.getOverallAttendanceScore("0000000"))
         #self.getStudentJson("0000000")
         #print(self.getLectureAttendance("8"))
+        print(self.getTimetableKeysFromCourseId("MATH08057"))
         self.wipeAttendanceLog("1")
         print('--------------------------')
         self.takeAttendance("1")
