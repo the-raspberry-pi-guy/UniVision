@@ -165,6 +165,7 @@ class FaceID(object):
     def addStudentToDatabase(self, id, name, programme, cursor):
         query = "INSERT INTO students (studentID, studentName, studentProgramme) VALUES ('" + id + "', '" + name + "', '" + programme + "');"
         cursor.execute(query)
+        cursor.commit()
 
     def takeAttendance(self, timetableKey, cursor):
         try:
@@ -182,12 +183,85 @@ class FaceID(object):
                             addQuery = "INSERT INTO attendance (studentID, timetableKey) VALUES ('" + studentId + "', '" + timetableKey + "');"
                             cursor.execute(addQuery)
                             cursor.commit()
-
                             self.personScanned = studentId
-                            print("self.personScanned:")
-                            print(self.personScanned)
+                        else:
+                            print('Attendance already taken')
         except KeyboardInterrupt:
             self.conn.close()
+
+    def getStudentDetails(self, studentId, cursor):
+        try:
+            retrieveDetailsQuery = "SELECT * FROM students WHERE (studentID = '" + studentId + "');"
+            cursor.execute(retrieveDetailsQuery)
+            return cursor.fetchone()
+        except:
+            print("Error in getStudentName")
+
+    def getCourseDetails(self, courseId, cursor):
+        try:
+            retrieveCourseQuery = "SELECT * FROM courses WHERE (courseID = '" + courseId + "');"
+            cursor.execute(retrieveCourseQuery)
+            return cursor.fetchone()
+        except:
+            print("Error in getCourseDetails")
+
+    def getCourseAttendanceScore(self, studentId, courseId, cursor):
+        try:
+            retrieveTotalNoLecturesQuery = "SELECT timetableKey FROM timetable WHERE (courseID = '" + courseId + "');"
+            cursor.execute(retrieveTotalNoLecturesQuery)
+            totalNoLectures = len(cursor.fetchall())
+
+            retrieveAllAttendancesQuery = "SELECT * FROM attendance WHERE (studentID = '" + studentId + "');"
+            cursor.execute(retrieveAllAttendancesQuery)
+            allAttendances = cursor.fetchall()
+
+            print(allAttendances)
+
+            totalNoAttendances = 0
+            for attendance in allAttendances:
+                attendanceQuery = "SELECT courseID FROM timetable WHERE timetableKey = '" + str(attendance[2]) + "';"
+                cursor.execute(attendanceQuery)
+                lectureCourseId = cursor.fetchone()
+                if lectureCourseId:
+                  if lectureCourseId[0] == courseId:
+                      totalNoAttendances += 1
+
+            score = round((totalNoAttendances/totalNoLectures)*100,1)
+            return score, totalNoAttendances, totalNoLectures
+        except Exception as e:
+            print(e)
+
+
+    def getOverallAttendanceScore(self, studentId, cursor):
+        try:
+            retrieveStudentCourseChoicesQuery = "SELECT courseID FROM studentsCourseChoices WHERE studentID = '" + studentId + "';"
+            cursor.execute(retrieveStudentCourseChoicesQuery)
+            studentChoices = cursor.fetchall()
+            print(studentChoices)
+
+            attendanceSum = 0
+            lectureSum = 0
+            for course in studentChoices:
+                _, attendanceNo, lectureNo = self.getCourseAttendanceScore(studentId, course[0], cursor)
+                attendanceSum += attendanceNo
+                lectureSum += lectureNo
+
+            print(attendanceSum)
+            print(lectureSum)
+            totalScore = round((attendanceSum / lectureSum) * 100, 1)
+            print(totalScore)
+            return totalScore
+
+        except Exception as e:
+            print(e)  
+
+    def wipeAttendanceLog(self, timetableKey, cursor):
+        try:
+            wipeAttendanceQuery = "DELETE FROM attendance WHERE timetableKey = '" + timetableKey + "';"
+            cursor.execute(wipeAttendanceQuery)
+            cursor.commit()
+        except Exception as e:
+            print(e)  
 
     def hackCambridgeTrainInit(self):
         self.createGroup("testgroup", "hello group")
@@ -220,7 +294,12 @@ class FaceID(object):
         cursor = self.connectSQLDatabase()
 #        self.hackCambridgeTrainInit() # Init only once
 #        self.hackCambridgeDatabaseInit(cursor) # Also init only once
-        self.listPersonsInGroup("testgroup")
+        #self.listPersonsInGroup("testgroup")
+        #print(self.getStudentDetails("0000000", cursor))
+        #print(self.getCourseDetails("MATH08057", cursor))
+        #print(self.getCourseAttendanceScore("0000000" ,"MATH08057", cursor))
+        #print(self.getOverallAttendanceScore("0000000", cursor))
+        self.wipeAttendanceLog("1", cursor)
         print('--------------------------')
         self.takeAttendance("1" ,cursor)
 
