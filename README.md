@@ -2,6 +2,9 @@
 
 ![alt text](https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/static/UniVision_logo.png)
 
+# Video
+https://www.youtube.com/watch?v=XtQeyhVP8pg&feature=youtu.be
+
 # Overview
 UniVision is a system that uses **cloud-based face identification** to accurately record and monitor the attendance of University students in lectures via a **video livestream**. Accessed over an easy-to-use **web interface**, our software uses a standard webcam and **Microsoft Azure web services** to determine people coming into a lecture theatre. Trained using **machine-learning algorithms** on only a small sample of images, UniVision uses **Microsoft Azure's Face API** - a **REST API** with a high level of accuracy - to quickly and efficently inform a lecturer as to whether a student is present in the class. In the background, an **SQL Azure database** stores a catalogue of students, their course information and timetables, amongst other information. Using our code, statistics like lecture attendance and other averages can be calculated and presented to the user.
 
