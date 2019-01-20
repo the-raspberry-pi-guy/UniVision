@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    List
+{% endblock %}
+
+{% block main %}
+    <div class="row align-items-center mt-5 mx-3">
+        <div class="col-md-4">
+            <img src="../static/UniVision_logo.png" class="img-fluid" alt="UniVision logo">
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col">
+            <table id="data" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Course</th>
+                        <th scope="col" class="text-left">ID</td>
+                        <th scope="col" class="text-left">School</td>
+                        <th scope="col" class="text-left">Attendance</td>
+                    </tr>
+                </thead>
+                <tbody id="list-data-body">
+                    {% for course in coursesList %}
+                        <tr>
+                            <th scope="row">{{ course["courseName"]  }}</th>
+                            <td class="text-left">{{ course["courseID"] }}</td>
+                            <td class="text-left">{{ course["school"] }}</td>
+                            <td class="text-left">{{ course["attendance"] }}%</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
