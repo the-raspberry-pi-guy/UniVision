@@ -19,7 +19,7 @@ When the web interface is started, the camera feed begins to stream information.
 
 IMAGE OF FACE RECOGNTION
 
-We have then programmed the interface with Azure services and, after this stage, for each frame of video any identification is passed back to the program. When a student is recognised, their unique Univeristy number (Student ID) is stored in an SQL database, also hosted in the cloud using Azure web services. This data is linked to other fields and information,like student name, their prior attendance and courses they are studying.
+We have then programmed the interface with Azure services and, after this stage, for each frame of video any identification is passed back to the program. When a student is recognised, their unique Univeristy number (Student ID) is stored in an SQL database, also hosted in the cloud using Azure web services. This data is linked to other fields and information, like student name, their prior attendance and courses they are studying.
 
 IMAGE OF DATABASE
 
