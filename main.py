@@ -189,6 +189,9 @@ class FaceID(object):
         except KeyboardInterrupt:
             self.conn.close()
 
+    def getLastPersonScanned(self):
+        return self.personScanned
+
     def getStudentDetails(self, studentId, cursor):
         try:
             retrieveDetailsQuery = "SELECT * FROM students WHERE (studentID = '" + studentId + "');"
