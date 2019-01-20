@@ -1,5 +1,17 @@
 import http.client, urllib.request, urllib.parse, urllib.error, base64, json, time, requests, cv2, numpy, pyodbc
 
+def connectSQLDatabase():
+    server = 'univision.database.windows.net'
+    database = 'UniVision'
+    username = 'adminunivision'
+    password = '!univision19012019'
+    driver= '{ODBC Driver 17 for SQL Server}'
+    cnxn = pyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password)
+    cursor = cnxn.cursor()
+    return cursor
+
+cursor = connectSQLDatabase()
+
 class FaceID(object):
     """The FaceID Class"""
 
@@ -12,16 +24,6 @@ class FaceID(object):
         'Content-Type': 'application/json',
         'Ocp-Apim-Subscription-Key': '700bad17d5d6443bad2fd69b0da27cdc',
     }
-
-    def connectSQLDatabase(self):
-        server = 'univision.database.windows.net'
-        database = 'UniVision'
-        username = 'adminunivision'
-        password = '!univision19012019'
-        driver= '{ODBC Driver 17 for SQL Server}'
-        cnxn = pyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password)
-        cursor = cnxn.cursor()
-        return cursor
 
     def createGroup(self, groupId, groupName):
 
@@ -108,7 +110,6 @@ class FaceID(object):
         s, img = self.cam.read()
         return img, cv2.imencode(".jpg",img)[1].tostring()
 
-
     # Returns faceId to be fed into identifyFace, returns -1 (integer) if no face found
     def detectFace(self, imgData):
 
@@ -162,12 +163,12 @@ class FaceID(object):
         except Exception as e:
             print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
-    def addStudentToDatabase(self, id, name, programme, cursor):
+    def addStudentToDatabase(self, id, name, programme):
         query = "INSERT INTO students (studentID, studentName, studentProgramme) VALUES ('" + id + "', '" + name + "', '" + programme + "');"
         cursor.execute(query)
         cursor.commit()
 
-    def takeAttendance(self, timetableKey, cursor):
+    def takeAttendance(self, timetableKey):
         try:
             while True:
                 img, imgData = self.takeFrame()
@@ -189,7 +190,7 @@ class FaceID(object):
         except KeyboardInterrupt:
             self.conn.close()
 
-    def getStudentDetails(self, studentId, cursor):
+    def getStudentDetails(self, studentId):
         try:
             retrieveDetailsQuery = "SELECT * FROM students WHERE (studentID = '" + studentId + "');"
             cursor.execute(retrieveDetailsQuery)
@@ -197,7 +198,7 @@ class FaceID(object):
         except Exception as e:
             print(e)
 
-    def getCourseDetails(self, courseId, cursor):
+    def getCourseDetails(self, courseId):
         try:
             retrieveCourseQuery = "SELECT * FROM courses WHERE (courseID = '" + courseId + "');"
             cursor.execute(retrieveCourseQuery)
@@ -205,7 +206,7 @@ class FaceID(object):
         except Exception as e:
             print(e)
 
-    def getCourseAttendanceScore(self, studentId, courseId, cursor):
+    def getCourseAttendanceScore(self, studentId, courseId):
         try:
             retrieveTotalNoLecturesQuery = "SELECT timetableKey FROM timetable WHERE (courseID = '" + courseId + "');"
             cursor.execute(retrieveTotalNoLecturesQuery)
@@ -230,7 +231,7 @@ class FaceID(object):
             print(e)
 
 
-    def getOverallAttendanceScore(self, studentId, cursor):
+    def getOverallAttendanceScore(self, studentId):
         try:
             retrieveStudentCourseChoicesQuery = "SELECT courseID FROM studentsCourseChoices WHERE studentID = '" + studentId + "';"
             cursor.execute(retrieveStudentCourseChoicesQuery)
@@ -240,7 +241,7 @@ class FaceID(object):
             lectureSum = 0
 
             for course in studentChoices:
-                _, attendanceNo, lectureNo = self.getCourseAttendanceScore(studentId, course[0], cursor)
+                _, attendanceNo, lectureNo = self.getCourseAttendanceScore(studentId, course[0])
                 attendanceSum += attendanceNo
                 lectureSum += lectureNo
 
@@ -250,7 +251,7 @@ class FaceID(object):
         except Exception as e:
             print(e)  
 
-    def wipeAttendanceLog(self, timetableKey, cursor):
+    def wipeAttendanceLog(self, timetableKey):
         try:
             wipeAttendanceQuery = "DELETE FROM attendance WHERE timetableKey = '" + timetableKey + "';"
             cursor.execute(wipeAttendanceQuery)
@@ -280,23 +281,27 @@ class FaceID(object):
         self.trainGroup("testgroup")
         time.sleep(2) # Give a second to train database
 
-    def hackCambridgeDatabaseInit(self, cursor):
-        self.addStudentToDatabase("0000000", "Matt Timmons-Brown", "BEng Computer Science & Electronics", cursor)
-        self.addStudentToDatabase("1111111", "Neil Weidinger", "BSc Computer Science & Artificial Intelligence", cursor)
-        self.addStudentToDatabase("2222222", "Rafael Anderka", "BSc Computer Science", cursor)
+    def hackCambridgeDatabaseInit(self):
+        self.addStudentToDatabase("0000000", "Matt Timmons-Brown", "BEng Computer Science & Electronics")
+        self.addStudentToDatabase("1111111", "Neil Weidinger", "BSc Computer Science & Artificial Intelligence")
+        self.addStudentToDatabase("2222222", "Rafael Anderka", "BSc Computer Science")
+
+    def getStudentString(self, studentId):
+        studentDetails = self.getStudentDetails(studentId)
+        return studentDetails[2] + ", s" + studentDetails[1] + ", " + studentDetails[3]
 
     def main(self):
-        cursor = self.connectSQLDatabase()
         #self.hackCambridgeTrainInit() # Init only once
-        #self.hackCambridgeDatabaseInit(cursor) # Also init only once
+        #self.hackCambridgeDatabaseInit() # Also init only once
         #self.listPersonsInGroup("testgroup")
-        #print(self.getStudentDetails("0000000", cursor))
-        #print(self.getCourseDetails("MATH08057", cursor))
-        #print(self.getCourseAttendanceScore("0000000" ,"MATH08057", cursor))
-        #print(self.getOverallAttendanceScore("0000000", cursor))
-        self.wipeAttendanceLog("1", cursor)
+        #print(self.getStudentDetails("0000000"))
+        #print(self.getCourseDetails("MATH08057"))
+        #print(self.getCourseAttendanceScore("0000000" ,"MATH08057"))
+        #print(self.getOverallAttendanceScore("0000000"))
+        #self.getStudentString("0000000")
+        self.wipeAttendanceLog("1")
         print('--------------------------')
-        self.takeAttendance("1" ,cursor)
+        self.takeAttendance("1")
 
 if __name__ == "__main__":
     app = FaceID()
