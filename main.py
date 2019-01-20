@@ -185,7 +185,10 @@ def hackCambridgeDataSet():
     trainGroup("testgroup")
 
 def hackCambridgeDatabaseSetup():
-    addStudentToDatabase("0000000", "Matt", "G400", cursor)
+    addStudentToDatabase("0000000", "Matt Timmons-Brown", "BEng Computer Science & Electronics", cursor)
+    addStudentToDatabase("1111111", "Neil Weidinger", "BSc Computer Science & Artificial Intelligence", cursor)
+    addStudentToDatabase("2222222", "Rafael Anderka", "BSc Computer Science", cursor)
+
 
 
 if __name__ == "__main__":
