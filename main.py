@@ -165,18 +165,24 @@ class FaceID(object):
         query = "INSERT INTO students (studentID, studentName, studentProgramme) VALUES ('" + id + "', '" + name + "', '" + programme + "');"
         cursor.execute(query)
 
-    def takeAttendance(self, lectureId, cursor):
+    def takeAttendance(self, timetableKey, cursor):
         try:
             while True:
                 imgData = self.takeFrame()
                 detectedFaceId = self.detectFace(imgData)
                 if detectedFaceId != -1:
                     studentId = self.identifyFace(detectedFaceId, "testgroup")
-
+                    if studentId:
+                        checkPresentQuery = "SELECT * FROM attendance WHERE (studentID = '" + studentId + "' AND timetableKey = '" + timetableKey + "');"
+                        cursor.execute(checkPresentQuery)
+                        data = cursor.fetchone()
+                        if not data:
+                            print('Not in database, add:')
+                            addQuery = "INSERT INTO attendance (studentID, timetableKey) VALUES ('" + studentId + "', '" + timetableKey + "');"
+                            cursor.execute(addQuery)
+                            cursor.commit()
         except KeyboardInterrupt:
             self.conn.close()
-
-
 
     def hackCambridgeTrainInit(self):
         self.createGroup("testgroup", "hello group")
@@ -200,16 +206,18 @@ class FaceID(object):
         self.trainGroup("testgroup")
         time.sleep(2) # Give a second to train database
 
-    def hackCambridgeDatabaseInit(self):
+    def hackCambridgeDatabaseInit(self, cursor):
         self.addStudentToDatabase("0000000", "Matt Timmons-Brown", "BEng Computer Science & Electronics", cursor)
         self.addStudentToDatabase("1111111", "Neil Weidinger", "BSc Computer Science & Artificial Intelligence", cursor)
         self.addStudentToDatabase("2222222", "Rafael Anderka", "BSc Computer Science", cursor)
 
     def main(self):
         cursor = self.connectSQLDatabase()
-        self.hackCambridgeTrainInit() # Init only once
+#        self.hackCambridgeTrainInit() # Init only once
+#        self.hackCambridgeDatabaseInit(cursor) # Also init only once
         self.listPersonsInGroup("testgroup")
         print('--------------------------')
+        self.takeAttendance("1" ,cursor)
 
 if __name__ == "__main__":
     app = FaceID()
