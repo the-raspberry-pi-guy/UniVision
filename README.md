@@ -21,7 +21,7 @@ When the web interface is started, the camera feed begins to stream information.
 
 We have then programmed the interface with Azure services and, after this stage, for each frame of video any identification is passed back to the program. When a student is recognised, their unique Univeristy number (Student ID) is stored in an SQL database, also hosted in the cloud using Azure web services. This data is linked to other fields and information, like student name, their prior attendance and courses they are studying.
 
-IMAGE OF DATABASE
+![alt text](https://raw.githubusercontent.com/the-raspberry-pi-guy/UniVision/master/images/database.png)
 
 Meanwhile, at the front of the classroom, the teacher can monitor in real-time the students that are currently in their class. Before they start lecturing, they can disable the attendance by simply pressing "Stop".
 
