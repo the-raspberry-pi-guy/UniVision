@@ -14,7 +14,7 @@ setInterval(function()
 
             if (!(jsonData.id in students)) {
                 students[jsonData.id] = "defaultname";
-                dataBody.innerHTML += '<tr><th scope="row">' + jsonData.name + '</th><td id="student-data" class="text-right">' + jsonData.id + ' ' + jsonData.degree + '</td></tr>';
+                dataBody.innerHTML += '<tr><th scope="row">' + jsonData.name + ' (' + jsonData.id + ') ' + '</th><td id="student-data" class="text-right">' + jsonData.degree + '</td></tr>';
             }
         }
     });
