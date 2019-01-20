@@ -262,6 +262,26 @@ class FaceID(object):
         except Exception as e:
             print(e)  
 
+    def getLectureAttendance(self, timetableKey):
+        try:
+            getAttendedStudents = "SELECT * FROM attendance WHERE timetableKey = '" + timetableKey + "';"
+            cursor.execute(getAttendedStudents)
+            attendedStudents = cursor.fetchall()
+
+            getCourseId = "SELECT courseID FROM timetable WHERE timetableKey = '" + timetableKey + "';"
+            cursor.execute(getCourseId)
+            courseId = cursor.fetchone()
+
+            getRegisteredStudents = "SELECT * FROM studentsCourseChoices WHERE courseID = '" + courseId[0] + "';"
+            cursor.execute(getRegisteredStudents)
+            registeredStudents = cursor.fetchone()
+
+            score = round(len(attendedStudents)/len(registeredStudents)*100,2)
+            return score
+
+        except Exception as e:
+            print(e)
+
     def hackCambridgeTrainInit(self):
         self.createGroup("testgroup", "hello group")
         self.addPerson("0000000", "testgroup")
@@ -302,6 +322,7 @@ class FaceID(object):
         #print(self.getCourseAttendanceScore("0000000" ,"MATH08057"))
         #print(self.getOverallAttendanceScore("0000000"))
         #self.getStudentString("0000000")
+        #print(self.getLectureAttendance("8"))
         self.wipeAttendanceLog("1")
         print('--------------------------')
         self.takeAttendance("1")
