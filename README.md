@@ -45,6 +45,12 @@ As a project developed in only 24 hours, there are many areas for improvement an
 - Improve the web interface to include more features, like a calendar and interactive attendance features
 - Scale UniVison to be a University-wide system and incorporate other interfaces, like a library feature for taking out books, or a security system for access to restricted parts of campus and accommodation
 
+# Ethics
+
+As with any project using face identification, and especially with one based in education, there are obvious ethical concerns. Worries about tracking people, breaching privacy and other sensitive individual information do arise from the UniVision project.
+
+As this was a Hackathon and not necessarily a serious project, we decided to proceed with the project and experiment with our implementation. This is by no means finished work or a product.
+
 # Authors
 
 This is a Hack Cambridge 4D project, completely designed, coded and implemented in 24 hours, from 12pm on January 19th - January 20th.
