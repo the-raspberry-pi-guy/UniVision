@@ -22,7 +22,7 @@ class FaceID(object):
     headers = {
         # Request headers
         'Content-Type': 'application/json',
-        'Ocp-Apim-Subscription-Key': '700bad17d5d6443bad2fd69b0da27cdc',
+        'Ocp-Apim-Subscription-Key': 'INSERT_API_KEY',
     }
 
     def createGroup(self, groupId, groupName):
@@ -114,7 +114,7 @@ class FaceID(object):
     def detectFace(self, imgData):
 
         detectHeaders = {'Content-Type': 'application/octet-stream', 
-                   'Ocp-Apim-Subscription-Key': '700bad17d5d6443bad2fd69b0da27cdc'}
+                   'Ocp-Apim-Subscription-Key': 'INSERT_API_KEY'}
 
         url = 'https://northeurope.api.cognitive.microsoft.com/face/v1.0/detect'
 
