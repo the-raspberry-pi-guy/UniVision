@@ -6,7 +6,7 @@
 https://www.youtube.com/watch?v=XtQeyhVP8pg&feature=youtu.be
 
 # Overview
-UniVision is a system that uses **cloud-based face identification** to accurately record and monitor the attendance of University students in lectures via a **video livestream**. Accessed over an easy-to-use **web interface**, our software uses a standard webcam and **Microsoft Azure web services** to determine people coming into a lecture theatre. Trained using **machine-learning algorithms** on only a small sample of images, UniVision uses **Microsoft Azure's Face API** - a **REST API** with a high level of accuracy - to quickly and efficently inform a lecturer as to whether a student is present in the class. In the background, an **SQL Azure database** stores a catalogue of students, their course information and timetables, amongst other information. Using our code, statistics like lecture attendance and other averages can be calculated and presented to the user.
+UniVision is a system that uses **cloud-based face identification** to accurately record and monitor the attendance of University students in lectures via a **video livestream**. Accessed over an easy-to-use **web interface**, our software uses a standard webcam and **Microsoft Azure web services** to determine people coming into a lecture theatre. Trained on only a small sample of images (no need for large sample sets), UniVision uses **Microsoft Azure's Face API** to quickly and efficently inform a lecturer as to whether a student is present in the class. In the background, an **SQL Azure database** stores a catalogue of students, their course information and timetables, amongst other information. Using our program, statistics like lecture attendance and other averages can be calculated and presented to the user.
 
 # The Problem?
 A fact that many students do not like to own up to is that attendance at lectures is critical to education success. In a first year "Intro to Linear Algebra" course at the University of Edinburgh, missing just 2 lectures brought an average student's final grade down by 20%. Missing more caused an even steeper decline, with students who were absent in 5-10 lectures passing at a rate of less than 50%. This is a clear problem, with much evidence elsewhere: https://scholar.google.co.uk/scholar?hl=en&as_sdt=0%2C5&q=lecture+attendance+and+exam+results&btnG=
@@ -55,4 +55,4 @@ As this was a Hackathon and not necessarily a serious project, we decided to pro
 
 This is a Hack Cambridge 4D project, completely designed, coded and implemented in 24 hours, from 12pm on January 19th - January 20th.
 
-It's authors are Matt Timmons-Brown, Neil Weidinger, Rafael Anderka - 1st year Computer Science students at the University of Edinburgh
+Developed by Matt Timmons-Brown, Neil Weidinger, and Rafael Anderka - 1st year Computer Science students at the University of Edinburgh
